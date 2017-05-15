@@ -1,0 +1,10 @@
+// rename to default.json
+{
+  "mongodb": "mongodb://admin:pwd@localhost/vod",
+  "redis": "redis://:pwd@localhost:6379/0",
+  "secret": {
+    "public": "youngon",
+    "private": "youngon"
+  },
+  "uploadPath": "../uploads"
+}
