@@ -1,13 +1,14 @@
 const jwt = require('jwt-simple');
 const moment = require('moment');
 const redis = require('./redis');
-const logger = require('../utils/logger')('Token');
+const logger = require('log4js').getLogger('Token');
 
 exports.create = function (user) {
   const expires = moment().day(7).valueOf();
   return jwt.encode({
     _id: user._id,
     type: user.type,
+    stuid: user.stuid,
     exp: expires,
   }, 'youngon');
 }

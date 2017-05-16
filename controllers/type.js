@@ -1,5 +1,5 @@
 const Type = require('../models/type');
-const logger = require('../utils/logger')('Type');
+const logger = require('log4js').getLogger('Type');
 
 exports.add = async function (req, res) {
   const { name, type, sort } = req.body;

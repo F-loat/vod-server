@@ -8,6 +8,20 @@ require('babel-core/register');
 var app = require('../app');
 var http = require('http');
 
+try {
+  require('fs').mkdirSync('./log');
+} catch (e) {
+  if (e.code != 'EEXIST') {
+    console.error("Could not set up log directory, error was: ", e);
+    process.exit(1);
+  }
+}
+
+var log4js = require('log4js');
+log4js.configure('./config/log4js.json');
+
+var logger = log4js.getLogger('Startup');
+
 /**
  * Get port from environment and store in Express.
  */
@@ -86,5 +100,5 @@ function onListening() {
   var bind = typeof addr === 'string'
     ? 'pipe ' + addr
     : 'port ' + addr.port;
-  console.debug('Listening on ' + bind);
+  logger.debug('Listening on ' + bind);
 }

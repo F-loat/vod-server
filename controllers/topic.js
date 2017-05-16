@@ -1,5 +1,5 @@
 const Topic = require('../models/topic');
-const logger = require('../utils/logger')('Topic');
+const logger = require('log4js').getLogger('Topic');
 
 exports.add = async function (req, res) {
   const { title, content, type } = req.body;

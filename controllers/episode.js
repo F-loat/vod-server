@@ -3,7 +3,7 @@ const path = require('path');
 const config = require('config');
 const ffmpeg = require('fluent-ffmpeg');
 const Episode = require('../models/episode');
-const logger = require('../utils/logger')('Episode');
+const logger = require('log4js').getLogger('Episode');
 const uploadPath = config.get('uploadPath');
 
 function transcode(episode) {

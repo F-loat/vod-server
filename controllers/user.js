@@ -3,7 +3,7 @@ const jwt = require('jwt-simple');
 const User = require('../models/user');
 const createToken = require('../utils/token').create;
 const expireToken = require('../utils/token').expire;
-const logger = require('../utils/logger')('User');
+const logger = require('log4js').getLogger('User');
 
 exports.login = async function (req, res, next) {
   const stuid = req.body.stuid;
@@ -68,10 +68,11 @@ exports.list = async function (req, res) {
   ]);
   const users = await result[0];
   const totalCount = await result[1];
+  logger.info(`管理员${req.user.stuid}获取了用户列表`);
   res.json({ state: 1, content: {
     users,
     totalCount,
-  }})
+  }});
 };
 
 exports.update = async function (req, res) {
@@ -92,6 +93,7 @@ exports.delete = async function (req, res) {
   const _id = req.query._id;
   try {
     await User.update({ _id }, { $set: { deleted: true } });
+    logger.error(`用户${_id}被管理员${req.user.stuid}禁用`);
     res.json({ state: 1, content: true });
   } catch (err) {
     logger.error(err);

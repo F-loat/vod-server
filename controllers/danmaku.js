@@ -1,7 +1,7 @@
 const fs = require('fs');
 const url = require('url');
 const redis = require('../utils/redis');
-const logger = require('../utils/logger')('DPlayer');
+const logger = require('log4js').getLogger('DPlayer');
 const Danmaku = require('../models/danmaku');
 
 exports.list = function (req, res) {

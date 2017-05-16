@@ -5,7 +5,7 @@ const Video = require('../models/video');
 const Episode = require('../models/episode');
 const Type = require('../models/type');
 const redis = require('../utils/redis');
-const logger = require('../utils/logger')('Video');
+const logger = require('log4js').getLogger('Video');
 const uploadPath = config.get('uploadPath');
 
 /**
@@ -161,8 +161,12 @@ exports.update = async function (req, res) {
 
 exports.delete = async function (req, res) {
   const _id = req.query._id;
-  Video
-    .update({ _id }, { $set: { deleted: true } })
-    .then(() => res.json({ state: 1, content: true }))
-    .catch(err => res.json({ state: 0, msg: err }));
+  try {
+    await Video.update({ _id }, { $set: { deleted: true } });
+    res.json({ state: 1, content: true });
+    logger.info(`视频${_id}被管理员${req.user._id}删除`);
+  } catch (err) {
+    res.json({ state: 0, msg: err });
+    logger.error(err);
+  }
 };
