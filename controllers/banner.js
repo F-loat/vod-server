@@ -1,4 +1,5 @@
 const Banner = require('../models/banner');
+const logger = require('../utils/logger')('Banner');
 
 exports.add = async function (req, res) {
 };

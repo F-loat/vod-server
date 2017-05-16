@@ -1,11 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 const config = require('config');
-const superagent = require('superagent');
 const Video = require('../models/video');
 const Episode = require('../models/episode');
 const Type = require('../models/type');
 const redis = require('../utils/redis');
+const logger = require('../utils/logger')('Video');
 const uploadPath = config.get('uploadPath');
 
 /**
@@ -79,7 +79,7 @@ exports.typed = async function (req, res) {
     redis.expire('videoTypedLists', 86400);
   } catch (err) {
     res.status(500).json({ "state": 0, msg: '服务端错误' });
-    console.log(err);
+    logger.error(err);
   }
 };
 
@@ -120,7 +120,7 @@ exports.detail = async function (req, res) {
     if (video.deleted === true) throw "deleted";
     res.json({ state: 1, content: video });
   } catch (err) {
-    console.log(err);
+    logger.error(err);
     res.json({ state: 0, msg: err });
   }
 };

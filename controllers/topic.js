@@ -1,4 +1,5 @@
 const Topic = require('../models/topic');
+const logger = require('../utils/logger')('Topic');
 
 exports.add = async function (req, res) {
   const { title, content, type } = req.body;
@@ -41,7 +42,7 @@ exports.detail = async function (req, res) {
     if (topic.deleted === true) throw "deleted";
     res.json({ state: 1, content: topic });
   } catch (err) {
-    console.log(err);
+    logger.error(err);
     res.json({ state: 0, msg: err });
   }
 };

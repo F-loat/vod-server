@@ -3,6 +3,7 @@ const path = require('path');
 const config = require('config');
 const ffmpeg = require('fluent-ffmpeg');
 const Episode = require('../models/episode');
+const logger = require('../utils/logger')('Episode');
 const uploadPath = config.get('uploadPath');
 
 function transcode(episode) {
@@ -32,7 +33,7 @@ function transcode(episode) {
     .on('error', function(err) {
       episode.state = -1;
       episode.save();
-      console.error(err);
+      logger.error(err);
     })
     .run();
 };

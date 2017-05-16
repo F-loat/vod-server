@@ -1,9 +1,10 @@
 const jwt = require('jwt-simple');
 const moment = require('moment');
 const redis = require('./redis');
+const logger = require('../utils/logger')('Token');
 
 exports.create = function (user) {
-  const expires = moment().add(7, 'days').valueOf();
+  const expires = moment().day(7).valueOf();
   return jwt.encode({
     _id: user._id,
     type: user.type,
@@ -30,7 +31,6 @@ exports.verify = async function (req, res) {
     const reply = await redis.get(`token${user._id}`);
     if (reply && reply >= user.exp) {
       res.status(401).json({ "state": 0, msg: '令牌已被强制过期' });
-      console.log(reply);
       return false;
     }
     return user;

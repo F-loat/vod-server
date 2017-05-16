@@ -3,6 +3,7 @@ const jwt = require('jwt-simple');
 const User = require('../models/user');
 const createToken = require('../utils/token').create;
 const expireToken = require('../utils/token').expire;
+const logger = require('../utils/logger')('User');
 
 exports.login = async function (req, res, next) {
   const stuid = req.body.stuid;
@@ -82,7 +83,7 @@ exports.update = async function (req, res) {
       }, { new: true });
     res.json({ state: 1, content: user });
   } catch (err) {
-    console.log(err);
+    logger.error(err);
     res.json({ state: 0, msg: err });
   }
 };
@@ -93,7 +94,7 @@ exports.delete = async function (req, res) {
     await User.update({ _id }, { $set: { deleted: true } });
     res.json({ state: 1, content: true });
   } catch (err) {
-    console.log(err);
+    logger.error(err);
     res.json({ state: 0, msg: err });
   }
 };

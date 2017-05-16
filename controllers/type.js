@@ -1,4 +1,5 @@
 const Type = require('../models/type');
+const logger = require('../utils/logger')('Type');
 
 exports.add = async function (req, res) {
   const { name, type, sort } = req.body;
@@ -36,7 +37,7 @@ exports.update = async function (req, res) {
       }, { new: true });
     res.json({ state: 1, content: type });
   } catch (err) {
-    console.log(err);
+    logger.error(err);
     res.json({ state: 0, msg: err });
   }
 };

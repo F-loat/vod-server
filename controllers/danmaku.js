@@ -1,12 +1,13 @@
 const fs = require('fs');
 const url = require('url');
 const redis = require('../utils/redis');
+const logger = require('../utils/logger')('DPlayer');
 const Danmaku = require('../models/danmaku');
 
 exports.list = function (req, res) {
   Danmaku.distinct('player', function (err, data) {
     if (err) {
-      console.log(err);
+      logger.log(err);
     }
 
     let json = '';
@@ -31,15 +32,15 @@ exports.detail = function (req, res) {
 
     redis.get(`dplayer${id}`, function(err, reply) {
       if (reply) {
-        console.info(`DPlayer id ${id} form redis, IP: ${ip}`);
+        logger.info(`DPlayer id ${id} form redis, IP: ${ip}`);
         res.send(reply);
       }
       else {
-        console.info(`DPlayer id ${id} form mongodb, IP: ${ip}`);
+        logger.info(`DPlayer id ${id} form mongodb, IP: ${ip}`);
 
         Danmaku.find({player: id}, function (err, data) {
           if (err) {
-            console.error(err);
+            logger.error(err);
           }
 
           var dan = {
@@ -79,14 +80,14 @@ exports.add = function (req, res) {
   // check black ip
   var blanklist = fs.readFileSync('blacklist').toString().split('\n');
   if (blanklist.indexOf(ip.split(',')[0]) !== -1) {
-    console.info(`Reject POST form ${ip} for black ip.`);
+    logger.info(`Reject POST form ${ip} for black ip.`);
     res.send(`{"code": -1, "msg": "Rejected for black ip."}`);
     return;
   }
 
   // frequency limitation
   if (postIP.indexOf(ip) !== -1) {
-    console.info(`Reject POST form ${ip} for frequent operation.`);
+    logger.info(`Reject POST form ${ip} for frequent operation.`);
     res.send(`{"code": -2, "msg": "Rejected for frequent operation."}`);
     return;
   }
@@ -119,7 +120,7 @@ exports.add = function (req, res) {
       || jsonStr.color === undefined
       || jsonStr.type === undefined
       || jsonStr.text.length >= 30) {
-      console.info(`Reject POST form ${ip} for illegal data: ${JSON.stringify(jsonStr)}`);
+      logger.info(`Reject POST form ${ip} for illegal data: ${JSON.stringify(jsonStr)}`);
       res.send(`{"code": -3, "msg": "Rejected for illegal data"}`);
       return;
     }
@@ -129,19 +130,19 @@ exports.add = function (req, res) {
       return true;
     }
     if (!checkToken(jsonStr.token)) {
-      console.info(`Rejected POST form ${ip} for illegal token: ${jsonStr.token}`);
+      logger.info(`Rejected POST form ${ip} for illegal token: ${jsonStr.token}`);
       res.send(`{"code": -4, "msg": "Rejected for illegal token: ${jsonStr.token}"}`);
       return;
     }
 
     // check black username
     if (blanklist.indexOf(jsonStr.author) !== -1) {
-      console.info(`Reject POST form ${jsonStr.author} for black user.`);
+      logger.info(`Reject POST form ${jsonStr.author} for black user.`);
       res.send(`{"code": -5, "msg": "Rejected for black user."}`);
       return;
     }
 
-    console.info(`POST form ${ip}, data: ${JSON.stringify(jsonStr)}`);
+    logger.info(`POST form ${ip}, data: ${JSON.stringify(jsonStr)}`);
 
     var dan = new Danmaku({
       player: htmlEncode(jsonStr.player),
@@ -155,7 +156,7 @@ exports.add = function (req, res) {
     });
     dan.save(function (err, d) {
       if (err) {
-        console.error(err);
+        logger.error(err);
         res.send(`{"code": 0, "msg": "Error happens, please contact system administrator."}`);
       }
       else {
