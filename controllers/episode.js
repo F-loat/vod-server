@@ -38,12 +38,12 @@ function transcode(episode) {
     .run();
 };
 
-exports.add = async function (req, res) {
-  if (!req.file) req.file = {};
-  const videoPath = req.file.path;
+exports.add = async (ctx) => {
+  const file = ctx.req.file || {};
+  const videoPath = file.path;
   const content = path.relative(uploadPath, videoPath);
 
-  res.json({ state: 1, content });
+  ctx.body = { state: 1, content };
 };
 
 /**
@@ -51,34 +51,34 @@ exports.add = async function (req, res) {
  * @param limit  {String}  查询条数
  * @param page   {String}  当前页数
  */
-exports.list = async function (req, res) {
+exports.list = async (ctx) => {
   const query = { deleted: false };
-  const { state, videoId } = req.query;
-  if (state) query.state = state;
+  const { state, videoId } = ctx.query;
+  if (state) query.state = JSON.parse(state);
   if (videoId) query.video = videoId;
 
   const episodes = await Episode
     .find(query)
     .populate('creater', 'nickname stuid');
-  res.json({ state: 1, content: episodes })
+  ctx.body = { state: 1, content: episodes };
 };
 
-exports.detail = async function (req, res) {
+exports.detail = async (ctx) => {
 };
 
-exports.transcode = async function (req, res) {
+exports.transcode = async (ctx) => {
   const transcodingCount = await Episode.count({ state: 1 });
   if (transcodingCount > 2) {
-    res.json({ state: 0, msg: '超出转码并发限额' });
+    ctx.body = { state: 0, msg: '超出转码并发限额' };
     return;
   }
-  const episode = await Episode.findById(req.body._id);
+  const episode = await Episode.findById(ctx.request.body._id);
   transcode(episode);
-  res.json({ state: 1, content: true });
+  ctx.body = { state: 1, content: true };
 };
 
-exports.update = async function (req, res) {
+exports.update = async (ctx) => {
 };
 
-exports.delete = async function (req, res) {
+exports.delete = async (ctx) => {
 };

@@ -1,34 +1,34 @@
 const Comment = require('../models/comment');
 const logger = require('log4js').getLogger('Comment');
 
-exports.add = async function (req, res) {
-  const { id, content, reply } = req.body;
+exports.add = async (ctx) => {
+  const { id, content, reply } = ctx.request.body;
   const newComment = await Comment.create({
     subject: id,
     content,
-    commenter: req.user._id,
+    commenter: ctx.user._id,
     reply,
   });
-  res.json({ state: 1, content: newComment });
+  ctx.body = { state: 1, content: newComment };
 };
 
-exports.list = async function (req, res) {
+exports.list = async (ctx) => {
   const query = {
-    subject: req.query.id,
+    subject: ctx.query.id,
     deleted: false,
   };
   const comments = await Comment
     .find(query)
     .populate('commenter', 'nickname stuid')
     .sort({ 'createdAt': -1 });
-  res.json({ state: 1, content: comments });
+  ctx.body = { state: 1, content: comments };
 };
 
-exports.detail = async function (req, res) {
+exports.detail = async (ctx) => {
 };
 
-exports.update = async function (req, res) {
+exports.update = async (ctx) => {
 };
 
-exports.delete = async function (req, res) {
+exports.delete = async (ctx) => {
 };

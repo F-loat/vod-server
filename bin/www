@@ -4,36 +4,21 @@
  * Module dependencies.
  */
 
-require('babel-core/register');
 var app = require('../app');
 var http = require('http');
-
-try {
-  require('fs').mkdirSync('./log');
-} catch (e) {
-  if (e.code != 'EEXIST') {
-    console.error("Could not set up log directory, error was: ", e);
-    process.exit(1);
-  }
-}
-
-var log4js = require('log4js');
-log4js.configure('./config/log4js.json');
-
-var logger = log4js.getLogger('Startup');
+var log = require('../utils/log');
 
 /**
  * Get port from environment and store in Express.
  */
 
 var port = normalizePort(process.env.PORT || '7517');
-app.set('port', port);
 
 /**
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+var server = http.createServer(app.callback());
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -41,7 +26,6 @@ var server = http.createServer(app);
 
 server.listen(port);
 server.on('error', onError);
-server.on('listening', onListening);
 
 /**
  * Normalize a port into a number, string, or false.
@@ -89,16 +73,4 @@ function onError(error) {
     default:
       throw error;
   }
-}
-
-/**
- * Event listener for HTTP server "listening" event.
- */
-
-function onListening() {
-  var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
-  logger.debug('Listening on ' + bind);
 }

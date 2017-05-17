@@ -22,10 +22,11 @@ const uploadPath = config.get('uploadPath');
  * @param type        {String}  类型
  * @param uploaders   {Array}   上传者
  */
-exports.add = async function (req, res) {
-  const info = req.body;
-  if (!req.file) req.file = {};
-  const posterPath = req.file.path;
+
+exports.add = async (ctx) => {
+  const info = ctx.req.body;
+  const poster = ctx.req.file || {};
+  const posterPath = poster.path;
   const lastVideo = await Video.findOne().sort({ 'sort': -1 });
   const video = await Video.create({
     title: info.title,
@@ -37,7 +38,7 @@ exports.add = async function (req, res) {
     summary: info.summary,
     year: info.year,
     type: info.type,
-    creater: req.user._id,
+    creater: ctx.user._id,
     sort: info.sort || (lastVideo ? lastVideo.sort + 1 : 0),
   })
   const episodes = JSON.parse(info.episodes);
@@ -47,18 +48,18 @@ exports.add = async function (req, res) {
     name: episode.name,
     filePath: episode.path,
     video: video._id,
-    creater: req.user._id,
+    creater: ctx.user._id,
     sort: lastEpisode ? lastEpisode.sort + index + 1 : 0,
   }));
   await Promise.all(queue);
-  res.json({ state: 1, content: true })
+  ctx.body = { state: 1, content: true };
 };
 
-exports.typed = async function (req, res) {
+exports.typed = async (ctx) => {
   try {
     const reply = await redis.get('videoTypedLists');
     if (reply) {
-      res.json({ state: 1, content: JSON.parse(reply) });
+      ctx.body = { state: 1, content: JSON.parse(reply) };
       return;
     }
 
@@ -73,7 +74,7 @@ exports.typed = async function (req, res) {
       videos,
       type: types[index],
     }));
-    res.json({ state: 1, content: lists });
+    ctx.body = { state: 1, content: lists };
 
     redis.set('videoTypedLists', JSON.stringify(lists));
     redis.expire('videoTypedLists', 86400);
@@ -88,9 +89,9 @@ exports.typed = async function (req, res) {
  * @param limit  {String}  查询条数
  * @param page   {String}  查询页数
  */
-exports.list = async function (req, res) {
+exports.list = async (ctx) => {
   const query = { deleted: false };
-  const { type, limit = 0, page, search } = req.query;
+  const { type, limit = 0, page, search } = ctx.query;
   if (type) query.type = type;
   if (search) query.$or = [
     { 'title': {'$regex': search, $options: '$i'} },
@@ -108,28 +109,30 @@ exports.list = async function (req, res) {
   ]);
   const videos = result[0];
   const totalCount = result[1];
-  res.json({ state: 1, content: {
+  ctx.body = { state: 1, content: {
     videos,
     totalCount,
-  }})
+  }};
 };
 
-exports.detail = async function (req, res) {
+exports.detail = async (ctx) => {
   try {
-    const video = await Video.findById(req.query._id);
-    if (video.deleted === true) throw "deleted";
-    res.json({ state: 1, content: video });
+    const video = await Video.findById(ctx.query._id);
+    if (!video) throw 'not exist';
+    if (video.deleted === true) throw 'deleted';
+    ctx.body = { state: 1, content: video };
   } catch (err) {
     logger.error(err);
-    res.json({ state: 0, msg: err });
+    ctx.body = { state: 0, msg: err };
   }
 };
 
-exports.update = async function (req, res) {
-  const info = req.body;
+exports.update = async (ctx) => {
+  const info = ctx.req.body;
   const video = await Video.findById(info._id);
-  if (req.file) {
-    const posterPath = req.file.path;
+  const poster = ctx.req.file;
+  if (poster) {
+    const posterPath = poster.path;
     const realPath = path.join(uploadPath, video.posterPath);
     if (fs.existsSync(realPath)) fs.unlinkSync(realPath);
     video.posterPath = path.relative(uploadPath, posterPath);
@@ -142,7 +145,7 @@ exports.update = async function (req, res) {
   video.summary = info.summary;
   video.year = info.year;
   video.type = info.type;
-  video.creater = req.user._id;
+  video.creater = ctx.user._id;
   video.sort = info.sort || video.sort;
   video.save();
   const episodes = JSON.parse(info.episodes);
@@ -152,21 +155,21 @@ exports.update = async function (req, res) {
     name: episode.name,
     filePath: episode.path,
     video: video._id,
-    creater: req.user._id,
+    creater: ctx.user._id,
     sort: lastEpisode ? lastEpisode.sort + index + 1 : 0,
   }));
   await Promise.all(queue);
-  res.json({ state: 1, content: video });
+  ctx.body = { state: 1, content: video };
 };
 
-exports.delete = async function (req, res) {
-  const _id = req.query._id;
+exports.delete = async (ctx) => {
+  const _id = ctx.query._id;
   try {
     await Video.update({ _id }, { $set: { deleted: true } });
-    res.json({ state: 1, content: true });
-    logger.info(`视频${_id}被管理员${req.user._id}删除`);
+    ctx.body = { state: 1, content: true };
+    logger.info(`视频${_id}被管理员${ctx.user._id}删除`);
   } catch (err) {
-    res.json({ state: 0, msg: err });
+    ctx.body = { state: 0, msg: err };
     logger.error(err);
   }
 };

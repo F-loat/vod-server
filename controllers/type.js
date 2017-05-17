@@ -1,51 +1,55 @@
 const Type = require('../models/type');
 const logger = require('log4js').getLogger('Type');
 
-exports.add = async function (req, res) {
-  const { name, type, sort } = req.body;
+exports.add = async (ctx) => {
+  const { name, type, sort } = ctx.request.body;
   const lastType = await Type.findOne({ type }).sort({ 'sort': -1 });
   const newType = await Type.create({
     name,
     type,
-    creater: req.user._id,
+    creater: ctx.user._id,
     sort: sort || (lastType ? lastType.sort + 1 : 0),
   });
-  res.json({ state: 1, content: newType });
+  ctx.body = { state: 1, content: newType };
 };
 
-exports.list = async function (req, res) {
+exports.list = async (ctx) => {
   const query = { deleted: false };
-  const type = req.query.type;
+  const type = ctx.query.type;
   if (type) query.type = type;
 
   const types = await Type
     .find(query)
     .populate('creater', 'nickname stuid')
     .sort({ 'sort': 1 });
-  res.json({ state: 1, content: types });
+  ctx.body = { state: 1, content: types };
 };
 
-exports.detail = async function (req, res) {
+exports.detail = async (ctx) => {
 };
 
-exports.update = async function (req, res) {
-  const { _id, name, sort } = req.body;
+exports.update = async (ctx) => {
+  const { _id, name, sort } = ctx.request.body;
   try {
     const type = await Type
       .findByIdAndUpdate(_id, {
         $set: { name, sort },
       }, { new: true });
-    res.json({ state: 1, content: type });
+    ctx.body = { state: 1, content: type };
   } catch (err) {
     logger.error(err);
-    res.json({ state: 0, msg: err });
+    ctx.body = { state: 0, msg: err };
   }
 };
 
-exports.delete = async function (req, res) {
-  const _id = req.query._id;
-  Type
-    .update({ _id: _id }, { $set: { deleted: true } })
-    .then(() => res.json({ state: 1, content: true }))
-    .catch(err => res.json({ state: 0, msg: err }));
+exports.delete = async (ctx) => {
+  const _id = ctx.query._id;
+  try {
+    await Type.update({ _id }, { $set: { deleted: true } });
+    ctx.body = { state: 1, content: true };
+    logger.info(`视频${_id}被管理员${ctx.user._id}删除`);
+  } catch (err) {
+    ctx.body = { state: 0, msg: err };
+    logger.error(err);
+  }
 };

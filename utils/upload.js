@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const config = require('config');
-const multer  = require('multer');
+const multer = require('koa-multer');
 
 const uploadPath = config.get('uploadPath');
 const episodePath = path.join(uploadPath, 'episode');

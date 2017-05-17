@@ -1,17 +1,17 @@
 const Banner = require('../models/banner');
 const logger = require('log4js').getLogger('Banner');
 
-exports.add = async function (req, res) {
+exports.add = async (ctx) => {
 };
 
-exports.list = async function (req, res) {
+exports.list = async (ctx) => {
 };
 
-exports.detail = async function (req, res) {
+exports.detail = async (ctx) => {
 };
 
-exports.update = async function (req, res) {
+exports.update = async (ctx) => {
 };
 
-exports.delete = async function (req, res) {
+exports.delete = async (ctx) => {
 };

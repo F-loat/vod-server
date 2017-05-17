@@ -1,19 +1,19 @@
 const token = require('../utils/token');
 
-exports.login = async function (req, res, next) {
-  const user = await token.verify(req, res);
+exports.login = async (ctx, next) => {
+  const user = await token.verify(ctx);
   if (user) {
-    req.user = user;
-    next();
+    ctx.user = user;
+    await next();
   }
 };
 
-exports.admin = async function (req, res, next) {
-  const user = await token.verify(req, res);
+exports.admin = async (ctx, next) => {
+  const user = await token.verify(ctx);
   if (user && user.type > 9) {
-    req.user = user;
-    next();
-    return;
+    ctx.user = user;
+    await next();
+  } else {
+    ctx.body = { "state": 0, msg: '管理员可用！' };
   }
-  res.json({ "state": 0, msg: '管理员可用！' });
 };

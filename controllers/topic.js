@@ -1,22 +1,22 @@
 const Topic = require('../models/topic');
 const logger = require('log4js').getLogger('Topic');
 
-exports.add = async function (req, res) {
-  const { title, content, type } = req.body;
+exports.add = async (ctx) => {
+  const { title, content, type } = ctx.request.body;
   const lastTopic = await Topic.findOne({ type }).sort({ 'sort': -1 });
   const newTopic = await Topic.create({
     title,
     content,
     type,
-    author: req.user._id,
+    author: ctx.user._id,
     sort: lastTopic ? lastTopic.sort + 1 : 0,
   });
-  res.json({ state: 1, content: newTopic });
+  ctx.body = { state: 1, content: newTopic };
 };
 
-exports.list = async function (req, res) {
+exports.list = async (ctx) => {
   const query = { deleted: false };
-  const { type, limit = 0, page } = req.query;
+  const { type, limit = 0, page } = ctx.query;
   if (type) query.type = type;
 
   const result = await Promise.all([
@@ -30,25 +30,25 @@ exports.list = async function (req, res) {
   ]);
   const topics = result[0];
   const totalCount = result[1];
-  res.json({ state: 1, content: {
+  ctx.body = { state: 1, content: {
     topics,
     totalCount,
-  }})
+  }};
 };
 
-exports.detail = async function (req, res) {
+exports.detail = async (ctx) => {
   try {
-    const topic = await Topic.findById(req.query.id);
+    const topic = await Topic.findById(ctx.query.id);
     if (topic.deleted === true) throw "deleted";
-    res.json({ state: 1, content: topic });
+    ctx.body = { state: 1, content: topic };
   } catch (err) {
     logger.error(err);
-    res.json({ state: 0, msg: err });
+    ctx.body = { state: 0, msg: err };
   }
 };
 
-exports.update = async function (req, res) {
+exports.update = async (ctx) => {
 };
 
-exports.delete = async function (req, res) {
+exports.delete = async (ctx) => {
 };

@@ -1,5 +1,4 @@
-const express = require('express');
-const router = express.Router();
+const Router = require('koa-router');
 const Filter = require('../controllers/filter');
 const Video = require('../controllers/video');
 const Episode = require('../controllers/episode');
@@ -10,6 +9,9 @@ const Topic = require('../controllers/topic');
 const Type = require('../controllers/type');
 const User = require('../controllers/user');
 const upload = require('../utils/upload');
+const router = new Router({
+  prefix: '/request',
+});
 
 /**
  * @method GET 从服务器取出资源（一项或多项）
@@ -19,69 +21,71 @@ const upload = require('../utils/upload');
  * @method DELETE 从服务器删除资源
  */
 
-router.route('/video')
-  .get(Video.detail)
-  .post(Filter.admin, upload.single('poster'), Video.add)
-  .put(Filter.admin, upload.single('poster'), Video.update)
-  .delete(Filter.admin, Video.delete);
-router.route('/video/list')
-  .get(Video.list);
-router.route('/video/typed')
-  .get(Video.typed);
-router.route('/episode')
-  .get(Episode.detail)
-  .post(Filter.admin, upload.single('episode'), Episode.add);
-router.route('/episode/list')
-  .get(Episode.list)
-router.route('/episode/transcoding')
-  .post(Filter.admin, Episode.transcode);
-router.route('/danmaku')
-  .get(Danmaku.detail)
-  .post(Danmaku.add);
-router.route('/danmaku/list')
-  .get(Danmaku.list);
+router
+  .get('/video', Video.detail)
+  .post('/video', Filter.admin, upload.single('poster'), Video.add)
+  .put('/video', Filter.admin, upload.single('poster'), Video.update)
+  .delete('/video', Filter.admin, Video.delete);
+router
+  .get('/video/list', Video.list);
+router
+  .get('/video/typed', Video.typed);
 
-router.route('/banner')
-  .get(Banner.detail)
-  .post(Filter.admin, Banner.add)
-  .put(Filter.admin, Banner.update)
-  .delete(Filter.admin, Banner.delete);
-router.route('/banner/list')
-  .get(Banner.list);
+router
+  .get('/episode', Episode.detail)
+  .post('/episode', Filter.admin, upload.single('episode'), Episode.add);
+router
+  .get('/episode/list', Episode.list)
+router
+  .post('/episode/transcoding', Filter.admin, Episode.transcode);
 
-router.route('/comment')
-  .get(Comment.detail)
-  .post(Filter.login, Comment.add)
-  .put(Filter.admin, Comment.update)
-  .delete(Filter.admin, Comment.delete);
-router.route('/comment/list')
-  .get(Comment.list);
+router
+  .get('/danmaku', Danmaku.detail)
+  .post('/danmaku', Danmaku.add);
+router
+  .get('/danmaku/list', Danmaku.list);
 
-router.route('/topic')
-  .get(Topic.detail)
-  .post(Filter.login, Topic.add)
-  .put(Filter.admin, Topic.update)
-  .delete(Filter.admin, Topic.delete);
-router.route('/topic/list')
-  .get(Topic.list)
+router
+  .get('/banner', Banner.detail)
+  .post('/banner', Filter.admin, Banner.add)
+  .put('/banner', Filter.admin, Banner.update)
+  .delete('/banner', Filter.admin, Banner.delete);
+router
+  .get('/banner/list', Banner.list);
 
-router.route('/type')
-  .get(Type.detail)
-  .post(Filter.admin, Type.add)
-  .put(Filter.admin, Type.update)
-  .delete(Filter.admin, Type.delete);
-router.route('/type/list')
-  .get(Type.list)
+router
+  .get('/comment', Comment.detail)
+  .post('/comment', Filter.login, Comment.add)
+  .put('/comment', Filter.admin, Comment.update)
+  .delete('/comment', Filter.admin, Comment.delete);
+router
+  .get('/comment/list', Comment.list);
 
-router.route('/user')
-  .get(Filter.login, User.detail)
-  .put(Filter.admin, User.update)
-  .delete(Filter.admin, User.delete);
-router.route('/user/login')
-  .post(User.login);
-router.route('/user/logout')
-  .get(Filter.login, User.logout);
-router.route('/user/list')
-  .get(Filter.admin, User.list);
+router
+  .get('/topic', Topic.detail)
+  .post('/topic', Filter.login, Topic.add)
+  .put('/topic', Filter.admin, Topic.update)
+  .delete('/topic', Filter.admin, Topic.delete);
+router
+  .get('/topic/list', Topic.list)
+
+router
+  .get('/type', Type.detail)
+  .post('/type', Filter.admin, Type.add)
+  .put('/type', Filter.admin, Type.update)
+  .delete('/type', Filter.admin, Type.delete);
+router
+  .get('/type/list', Type.list)
+
+router
+  .get('/user', Filter.login, User.detail)
+  .put('/user', Filter.admin, User.update)
+  .delete('/user', Filter.admin, User.delete);
+router
+  .get('/user/list', Filter.admin, User.list);
+router
+  .post('/user/login', User.login);
+router
+  .get('/user/logout', Filter.login, User.logout);
 
 module.exports = router;
