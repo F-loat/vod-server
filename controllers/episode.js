@@ -4,6 +4,7 @@ const config = require('config');
 const ffmpeg = require('fluent-ffmpeg');
 const Episode = require('../models/episode');
 const logger = require('log4js').getLogger('Episode');
+
 const uploadPath = config.get('uploadPath');
 
 function transcode(episode) {
@@ -22,7 +23,7 @@ function transcode(episode) {
     .videoCodec('libx264')
     .addOption('-hls_time', 10)
     .addOption('-hls_list_size', 0)
-    .on('end', async function() {
+    .on('end', async () => {
       fs.unlinkSync(videoPath);
       episode.state = 2;
       episode.filePath = path.relative(uploadPath, outputPath);
@@ -30,13 +31,13 @@ function transcode(episode) {
       const nextEpisode = await Episode.findOne({ state: 0 });
       if (nextEpisode) transcode(nextEpisode);
     })
-    .on('error', function(err) {
+    .on('error', (err) => {
       episode.state = -1;
       episode.save();
       logger.error(err);
     })
     .run();
-};
+}
 
 exports.add = async (ctx) => {
   const file = ctx.req.file || {};

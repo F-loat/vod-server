@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const Schema   = mongoose.Schema;
+
+const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
 
 /**
@@ -26,10 +27,10 @@ const episodeSchema = new Schema({
   timestamps: true,
 });
 
-episodeSchema.pre('save', function(next) {
+episodeSchema.pre('save', function replace(next) {
   this.filePath = this.filePath.replace(/\\/g, '/');
   next();
-})
+});
 
 const Episode = mongoose.model('Episode', episodeSchema);
 

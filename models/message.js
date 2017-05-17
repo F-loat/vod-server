@@ -1,7 +1,7 @@
-const mongoose  = require('mongoose');
-const BaseModel = require("./base_model");
-const Schema    = mongoose.Schema;
-const ObjectId  = Schema.Types.ObjectId;
+const mongoose = require('mongoose');
+
+const Schema = mongoose.Schema;
+const ObjectId = Schema.Types.ObjectId;
 
 /**
  * @param subject      {ObjectId}  主题
@@ -27,6 +27,6 @@ const messageSchema = new Schema({
   timestamps: true,
 });
 
-messageSchema.index({master: 1, has_read: -1, create_time: -1});
+messageSchema.index({ master: 1, has_read: -1, create_time: -1 });
 
-mongoose.model('Message', MessageSchema);
+mongoose.model('Message', messageSchema);

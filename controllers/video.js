@@ -1,11 +1,12 @@
 const fs = require('fs');
 const path = require('path');
 const config = require('config');
+const logger = require('log4js').getLogger('Video');
 const Video = require('../models/video');
 const Episode = require('../models/episode');
 const Type = require('../models/type');
 const redis = require('../utils/redis');
-const logger = require('log4js').getLogger('Video');
+
 const uploadPath = config.get('uploadPath');
 
 /**
@@ -27,7 +28,7 @@ exports.add = async (ctx) => {
   const info = ctx.req.body;
   const poster = ctx.req.file || {};
   const posterPath = poster.path;
-  const lastVideo = await Video.findOne().sort({ 'sort': -1 });
+  const lastVideo = await Video.findOne().sort({ sort: -1 });
   const video = await Video.create({
     title: info.title,
     aka: info.aka.split(','),
@@ -40,10 +41,10 @@ exports.add = async (ctx) => {
     type: info.type,
     creater: ctx.user._id,
     sort: info.sort || (lastVideo ? lastVideo.sort + 1 : 0),
-  })
+  });
   const episodes = JSON.parse(info.episodes);
   const lastEpisode = await Episode
-    .findOne({ video: video._id }).sort({ 'sort': -1 });
+    .findOne({ video: video._id }).sort({ sort: -1 });
   const queue = episodes.map((episode, index) => Episode.create({
     name: episode.name,
     filePath: episode.path,
@@ -67,7 +68,7 @@ exports.typed = async (ctx) => {
     const queue = types.map(type => Video.find({
       type,
       deleted: false,
-    }).select('title posterPath').sort({ 'sort': -1 }).limit(10));
+    }).select('title posterPath').sort({ sort: -1 }).limit(10));
 
     const results = await Promise.all(queue);
     const lists = results.map((videos, index) => ({
@@ -79,7 +80,8 @@ exports.typed = async (ctx) => {
     redis.set('videoTypedLists', JSON.stringify(lists));
     redis.expire('videoTypedLists', 86400);
   } catch (err) {
-    res.status(500).json({ "state": 0, msg: '服务端错误' });
+    ctx.status = 500;
+    ctx.body = { state: 0, msg: '服务端错误' };
     logger.error(err);
   }
 };
@@ -93,33 +95,38 @@ exports.list = async (ctx) => {
   const query = { deleted: false };
   const { type, limit = 0, page, search } = ctx.query;
   if (type) query.type = type;
-  if (search) query.$or = [
-    { 'title': {'$regex': search, $options: '$i'} },
-    { 'aka': {'$regex': search, $options: '$i'} },
-  ];
+  if (search) {
+    query.$or = [
+      { title: { $regex: search, $options: '$i' } },
+      { aka: { $regex: search, $options: '$i' } },
+    ];
+  }
 
   const result = await Promise.all([
     Video
       .find(query)
       .populate('creater', 'nickname stuid')
-      .sort({ 'sort': -1 })
+      .sort({ sort: -1 })
       .skip(page > 0 ? (page - 1) * limit : 0)
       .limit(Number(limit)),
     Video.count(query),
   ]);
   const videos = result[0];
   const totalCount = result[1];
-  ctx.body = { state: 1, content: {
-    videos,
-    totalCount,
-  }};
+  ctx.body = {
+    state: 1,
+    content: {
+      videos,
+      totalCount,
+    },
+  };
 };
 
 exports.detail = async (ctx) => {
   try {
     const video = await Video.findById(ctx.query._id);
-    if (!video) throw 'not exist';
-    if (video.deleted === true) throw 'deleted';
+    if (!video) throw new Error('not exist');
+    if (video.deleted === true) throw new Error('deleted');
     ctx.body = { state: 1, content: video };
   } catch (err) {
     logger.error(err);
@@ -150,7 +157,7 @@ exports.update = async (ctx) => {
   video.save();
   const episodes = JSON.parse(info.episodes);
   const lastEpisode = await Episode
-    .findOne({ video: video._id }).sort({ 'sort': -1 });
+    .findOne({ video: video._id }).sort({ sort: -1 });
   const queue = episodes.map((episode, index) => Episode.create({
     name: episode.name,
     filePath: episode.path,

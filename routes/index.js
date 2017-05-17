@@ -9,6 +9,7 @@ const Topic = require('../controllers/topic');
 const Type = require('../controllers/type');
 const User = require('../controllers/user');
 const upload = require('../utils/upload');
+
 const router = new Router({
   prefix: '/request',
 });
@@ -35,7 +36,7 @@ router
   .get('/episode', Episode.detail)
   .post('/episode', Filter.admin, upload.single('episode'), Episode.add);
 router
-  .get('/episode/list', Episode.list)
+  .get('/episode/list', Episode.list);
 router
   .post('/episode/transcoding', Filter.admin, Episode.transcode);
 
@@ -67,7 +68,7 @@ router
   .put('/topic', Filter.admin, Topic.update)
   .delete('/topic', Filter.admin, Topic.delete);
 router
-  .get('/topic/list', Topic.list)
+  .get('/topic/list', Topic.list);
 
 router
   .get('/type', Type.detail)
@@ -75,7 +76,7 @@ router
   .put('/type', Filter.admin, Type.update)
   .delete('/type', Filter.admin, Type.delete);
 router
-  .get('/type/list', Type.list)
+  .get('/type/list', Type.list);
 
 router
   .get('/user', Filter.login, User.detail)

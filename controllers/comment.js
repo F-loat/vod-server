@@ -20,7 +20,7 @@ exports.list = async (ctx) => {
   const comments = await Comment
     .find(query)
     .populate('commenter', 'nickname stuid')
-    .sort({ 'createdAt': -1 });
+    .sort({ createdAt: -1 });
   ctx.body = { state: 1, content: comments };
 };
 

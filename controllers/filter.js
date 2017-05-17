@@ -14,6 +14,6 @@ exports.admin = async (ctx, next) => {
     ctx.user = user;
     await next();
   } else {
-    ctx.body = { "state": 0, msg: '管理员可用！' };
+    ctx.body = { state: 0, msg: '管理员可用！' };
   }
 };

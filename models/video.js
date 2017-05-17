@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const Schema   = mongoose.Schema;
+
+const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
 
 /**
@@ -28,7 +29,7 @@ const videoSchema = new Schema({
   aka: [{ type: String }],
   performers: [{ type: String }],
   countries: [{ type: String }],
-  directors:  [{ type: String }],
+  directors: [{ type: String }],
   posterPath: { type: String },
   summary: { type: String },
   collectCount: { type: Number, default: 0 },
@@ -43,10 +44,10 @@ const videoSchema = new Schema({
   timestamps: true,
 });
 
-videoSchema.pre('save', function(next) {
+videoSchema.pre('save', function replace(next) {
   this.posterPath = this.posterPath.replace(/\\/g, '/');
   next();
-})
+});
 
 const Video = mongoose.model('Video', videoSchema);
 

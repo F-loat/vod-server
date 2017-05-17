@@ -1,11 +1,10 @@
 const request = require('superagent');
-const jwt = require('jwt-simple');
 const User = require('../models/user');
 const createToken = require('../utils/token').create;
 const expireToken = require('../utils/token').expire;
 const logger = require('log4js').getLogger('User');
 
-exports.login = async (ctx, next) => {
+exports.login = async (ctx) => {
   const stuid = ctx.request.body.stuid;
   const pwd = ctx.request.body.pwd;
   const url = 'http://ids1.tjcu.edu.cn/amserver/UI/Login';
@@ -31,7 +30,7 @@ exports.login = async (ctx, next) => {
   }
   let user = await User.findOne({ stuid });
   if (!user) user = await User.create({ stuid });
-  token = createToken(user);
+  const token = createToken(user);
   user.lastLoginAt = Date.now();
   user.save();
   ctx.body = { state: 1, content: { user, token } };
@@ -39,7 +38,7 @@ exports.login = async (ctx, next) => {
 
 exports.logout = (ctx) => {
   expireToken(ctx.user);
-}
+};
 
 exports.detail = async (ctx) => {
   const { _id, exp } = ctx.user;
@@ -68,10 +67,13 @@ exports.list = async (ctx) => {
   ]);
   const users = result[0];
   const totalCount = result[1];
-  ctx.body = { state: 1, content: {
-    users,
-    totalCount,
-  }};
+  ctx.body = {
+    state: 1,
+    content: {
+      users,
+      totalCount,
+    },
+  };
   logger.info(`管理员${ctx.user.stuid}获取了用户列表`);
 };
 

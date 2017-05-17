@@ -32,7 +32,7 @@ const storage = multer.diskStorage({
       cb(null, String(Date.now()));
     }
   },
-})
+});
 
 const upload = multer({ storage });
 

@@ -3,7 +3,7 @@ const logger = require('log4js').getLogger('Topic');
 
 exports.add = async (ctx) => {
   const { title, content, type } = ctx.request.body;
-  const lastTopic = await Topic.findOne({ type }).sort({ 'sort': -1 });
+  const lastTopic = await Topic.findOne({ type }).sort({ sort: -1 });
   const newTopic = await Topic.create({
     title,
     content,
@@ -23,23 +23,26 @@ exports.list = async (ctx) => {
     Topic
       .find(query)
       .populate('author', 'nickname stuid')
-      .sort({ 'sort': -1 })
+      .sort({ sort: -1 })
       .skip(page > 0 ? (page - 1) * limit : 0)
       .limit(Number(limit)),
     Topic.count(query),
   ]);
   const topics = result[0];
   const totalCount = result[1];
-  ctx.body = { state: 1, content: {
-    topics,
-    totalCount,
-  }};
+  ctx.body = {
+    state: 1,
+    content: {
+      topics,
+      totalCount,
+    },
+  };
 };
 
 exports.detail = async (ctx) => {
   try {
     const topic = await Topic.findById(ctx.query.id);
-    if (topic.deleted === true) throw "deleted";
+    if (topic.deleted === true) throw new Error('deleted');
     ctx.body = { state: 1, content: topic };
   } catch (err) {
     logger.error(err);

@@ -3,8 +3,10 @@ const config = require('config');
 const bodyParser = require('koa-bodyparser');
 const mongoose = require('mongoose');
 const moment = require('moment');
+
 const logger = require('./utils/log');
 const router = require('./routes');
+
 const app = new Koa();
 
 mongoose.Promise = global.Promise;

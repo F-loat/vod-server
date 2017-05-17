@@ -3,7 +3,7 @@ const logger = require('log4js').getLogger('Type');
 
 exports.add = async (ctx) => {
   const { name, type, sort } = ctx.request.body;
-  const lastType = await Type.findOne({ type }).sort({ 'sort': -1 });
+  const lastType = await Type.findOne({ type }).sort({ sort: -1 });
   const newType = await Type.create({
     name,
     type,
@@ -21,7 +21,7 @@ exports.list = async (ctx) => {
   const types = await Type
     .find(query)
     .populate('creater', 'nickname stuid')
-    .sort({ 'sort': 1 });
+    .sort({ sort: 1 });
   ctx.body = { state: 1, content: types };
 };
 

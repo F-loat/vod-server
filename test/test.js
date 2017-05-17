@@ -1,7 +1,7 @@
-var ffmpeg = require('fluent-ffmpeg');
+const ffmpeg = require('fluent-ffmpeg');
 
 // make sure you set the correct path to your video file
-var proc = ffmpeg('./mv.mp4')
+ffmpeg('./mv.mp4')
   .output('path/target_270p.m3u8')
   .audioCodec('aac')
   .videoCodec('libx264')
@@ -29,13 +29,13 @@ var proc = ffmpeg('./mv.mp4')
   //   folder: 'path/',
   //   size: '?x270'
   // })
-  .on('progress', function(info) {
+  .on('progress', (info) => {
     console.log(info);
   })
-  .on('end', function() {
+  .on('end', () => {
     console.log('file has been converted succesfully');
   })
-  .on('error', function(err) {
-    console.log('an error happened: ' + err.message);
+  .on('error', (err) => {
+    console.log(`an error happened: ${err.message}`);
   })
   .run();
