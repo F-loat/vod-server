@@ -3,6 +3,7 @@ module.exports = {
   parser: 'babel-eslint',
   'env': {
     'node': true,
+    'mocha': true,
   },
   parserOptions: {
     sourceType: 'module'

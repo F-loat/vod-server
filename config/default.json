@@ -1,0 +1,9 @@
+{
+  "mongodb": "mongodb://localhost/vod",
+  "redis": "redis://localhost:6379/0",
+  "secret": {
+    "public": "youngon",
+    "private": "youngon"
+  },
+  "uploadPath": "../uploads"
+}

@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "./node_modules/.bin/nodemon bin/www",
-    "lint": "eslint --format node_modules/eslint-friendly-formatter ."
+    "lint": "eslint --format node_modules/eslint-friendly-formatter .",
+    "test": "mocha --harmony"
   },
   "dependencies": {
     "config": "^1.26.1",
@@ -22,11 +23,14 @@
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",
+    "chai": "^3.5.0",
     "eslint": "^3.19.0",
     "eslint-config-airbnb-base": "^11.2.0",
     "eslint-friendly-formatter": "^3.0.0",
     "eslint-plugin-import": "^2.2.0",
-    "nodemon": "^1.11.0"
+    "mocha": "^3.4.1",
+    "nodemon": "^1.11.0",
+    "supertest": "^3.0.0"
   },
   "engines": {
     "node": ">= 7.6.0",
