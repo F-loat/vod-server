@@ -3,8 +3,13 @@ language: node_js
 node_js:
   - '7.10.0'
 
+env:
+  global:
+    - CODECOV_TOKEN: d5a600a3-25cd-4edf-8d7d-1c7aeb872fa8
+
 script:
-  - npm run test
+  - istanbul cover ./node_modules/mocha/bin/_mocha  --harmony
+  - cat ./coverage/coverage.raw.json | ./node_modules/.bin/codecov
 
 services:
   - mongodb
