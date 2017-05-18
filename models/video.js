@@ -45,7 +45,8 @@ const videoSchema = new Schema({
 });
 
 videoSchema.pre('save', function replace(next) {
-  this.posterPath = this.posterPath.replace(/\\/g, '/');
+  const posterPath = this.posterPath;
+  this.posterPath = posterPath && posterPath.replace(/\\/g, '/');
   next();
 });
 

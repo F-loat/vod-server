@@ -5,7 +5,9 @@
   "scripts": {
     "start": "./node_modules/.bin/nodemon bin/www",
     "lint": "eslint --format node_modules/eslint-friendly-formatter .",
-    "test": "istanbul cover ./node_modules/mocha/bin/_mocha  --harmony"
+    "test": "mocha --harmony",
+    "test:doc": "cross-env GEN_DOC=1 mocha --harmony",
+    "test:cover": "istanbul cover ./node_modules/mocha/bin/_mocha --harmony"
   },
   "dependencies": {
     "config": "^1.26.1",
@@ -26,6 +28,7 @@
     "babel-register": "^6.24.1",
     "chai": "^3.5.0",
     "codecov": "^2.2.0",
+    "cross-env": "^5.0.0",
     "eslint": "^3.19.0",
     "eslint-config-airbnb-base": "^11.2.0",
     "eslint-friendly-formatter": "^3.0.0",

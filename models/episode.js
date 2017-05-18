@@ -28,7 +28,8 @@ const episodeSchema = new Schema({
 });
 
 episodeSchema.pre('save', function replace(next) {
-  this.filePath = this.filePath.replace(/\\/g, '/');
+  const filePath = this.filePath;
+  this.filePath = filePath && filePath.replace(/\\/g, '/');
   next();
 });
 

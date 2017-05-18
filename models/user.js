@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 /**
- * @param stuid            {Number}   学号
+ * @param stuid            {String}   学号
  * @param nickname         {String}   昵称
  * @param remark           {String}   备注
  * @param avatar           {String}   头像
@@ -23,7 +23,7 @@ const Schema = mongoose.Schema;
  */
 
 const userSchema = new Schema({
-  stuid: { type: Number, unique: true },
+  stuid: { type: String, unique: true },
   nickname: { type: String },
   remark: { type: String },
   avatar: { type: String },

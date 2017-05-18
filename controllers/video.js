@@ -15,17 +15,17 @@ const uploadPath = config.get('uploadPath');
  * @param performers  {Array}   主演
  * @param countries   {Array}   国家
  * @param directors   {Array}   导演
- * @param posterPath {String}  海报位置
+ * @param poster      {File}    海报
  * @param summary     {String}  描述
  * @param year        {String}  年份
- * @param filePath   {String}  文件位置
+ * @param filePath    {String}  文件位置
  * @param episodes    {String}  剧集信息
  * @param type        {String}  类型
  * @param uploaders   {Array}   上传者
  */
 
 exports.add = async (ctx) => {
-  const info = ctx.req.body;
+  const info = ctx.req.body || ctx.request.body;
   const poster = ctx.req.file || {};
   const posterPath = poster.path;
   const lastVideo = await Video.findOne().sort({ sort: -1 });
@@ -35,14 +35,14 @@ exports.add = async (ctx) => {
     performers: info.performers.split(','),
     countries: info.countries.split(','),
     directors: info.directors.split(','),
-    posterPath: path.relative(uploadPath, posterPath),
+    posterPath: posterPath && path.relative(uploadPath, posterPath),
     summary: info.summary,
     year: info.year,
     type: info.type,
     creater: ctx.user._id,
     sort: info.sort || (lastVideo ? lastVideo.sort + 1 : 0),
   });
-  const episodes = JSON.parse(info.episodes);
+  const episodes = info.episodes ? JSON.parse(info.episodes) : [];
   const lastEpisode = await Episode
     .findOne({ video: video._id }).sort({ sort: -1 });
   const queue = episodes.map((episode, index) => Episode.create({
@@ -130,12 +130,12 @@ exports.detail = async (ctx) => {
     ctx.body = { state: 1, content: video };
   } catch (err) {
     logger.error(err);
-    ctx.body = { state: 0, msg: err };
+    ctx.body = { state: 0, msg: err.message };
   }
 };
 
 exports.update = async (ctx) => {
-  const info = ctx.req.body;
+  const info = ctx.req.body || ctx.request.body;
   const video = await Video.findById(info._id);
   const poster = ctx.req.file;
   if (poster) {
@@ -155,7 +155,7 @@ exports.update = async (ctx) => {
   video.creater = ctx.user._id;
   video.sort = info.sort || video.sort;
   video.save();
-  const episodes = JSON.parse(info.episodes);
+  const episodes = info.episodes ? JSON.parse(info.episodes) : [];
   const lastEpisode = await Episode
     .findOne({ video: video._id }).sort({ sort: -1 });
   const queue = episodes.map((episode, index) => Episode.create({

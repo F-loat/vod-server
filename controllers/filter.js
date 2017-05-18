@@ -13,7 +13,5 @@ exports.admin = async (ctx, next) => {
   if (user && user.type > 9) {
     ctx.user = user;
     await next();
-  } else {
-    ctx.body = { state: 0, msg: '管理员可用！' };
   }
 };
