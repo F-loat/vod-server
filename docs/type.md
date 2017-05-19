@@ -2,9 +2,15 @@
 ### 获取分类列表
 #### 接口：`GET` /request/type/list
 #### 参数
+
+
+
 参数名 | 类型 | 是否必填 | 说明
 --- | --- | --- | ---
 type | String | 否 | 分类类型
+
+
+
 #### 使用示例
 
 请求参数：
@@ -88,13 +94,35 @@ type | String | 否 | 分类类型
       "deleted": false
     },
     {
-      "_id": "591f2558cd6c392364d42477",
-      "updatedAt": "2017-05-19T17:03:20.826Z",
-      "createdAt": "2017-05-19T17:03:20.826Z",
+      "_id": "591f2559cd6c392364d4247a",
+      "updatedAt": "2017-05-19T17:03:21.025Z",
+      "createdAt": "2017-05-19T17:03:21.025Z",
+      "name": "电影",
+      "type": "video",
+      "creater": null,
+      "__v": 0,
+      "sort": 6,
+      "deleted": false
+    },
+    {
+      "_id": "591f2a790d05d70128829ed0",
+      "updatedAt": "2017-05-19T17:25:13.334Z",
+      "createdAt": "2017-05-19T17:25:13.334Z",
+      "name": "电影",
+      "type": "video",
+      "creater": null,
+      "__v": 0,
+      "sort": 6,
+      "deleted": false
+    },
+    {
+      "_id": "591f2aefb119a70730e3d929",
+      "updatedAt": "2017-05-19T17:27:11.796Z",
+      "createdAt": "2017-05-19T17:27:11.796Z",
       "name": "电影",
       "type": "video",
       "creater": {
-        "_id": "591f2558cd6c392364d42476",
+        "_id": "591f2aefb119a70730e3d928",
         "stuid": "000000"
       },
       "__v": 0,
@@ -107,11 +135,17 @@ type | String | 否 | 分类类型
 ### *新增分类*
 #### 接口：`POST` /request/type
 #### 参数
+
+
+
 参数名 | 类型 | 是否必填 | 说明
 --- | --- | --- | ---
 name | String | 是 | 分类名称
 type | String | 是 | 分类类型
 sort | Number | 否 | 排序值
+
+
+
 #### 使用示例
 
 请求参数：
@@ -131,32 +165,38 @@ sort | Number | 否 | 排序值
   "state": 1,
   "content": {
     "__v": 0,
-    "updatedAt": "2017-05-19T17:03:21.025Z",
-    "createdAt": "2017-05-19T17:03:21.025Z",
+    "updatedAt": "2017-05-19T17:27:12.015Z",
+    "createdAt": "2017-05-19T17:27:12.015Z",
     "name": "电影",
     "type": "video",
-    "creater": "591f2558cd6c392364d42478",
-    "_id": "591f2559cd6c392364d4247a",
+    "creater": "591f2aefb119a70730e3d92a",
+    "_id": "591f2af0b119a70730e3d92c",
     "sort": 6,
     "deleted": false
   }
 }
 ```
-### 新增分类
+### *修改分类*
 #### 接口：`POST` /request/type
 #### 参数
+
+
+
 参数名 | 类型 | 是否必填 | 说明
 --- | --- | --- | ---
 _id | String | 是 | 分类id
 name | String | 是 | 分类名称
 sort | Number | 否 | 排序值
+
+
+
 #### 使用示例
 
 请求参数：
 
 ```json
 {
-  "_id": "591f2559cd6c392364d4247c",
+  "_id": "591f2af0b119a70730e3d92e",
   "name": "综艺",
   "sort": 12
 }
@@ -169,11 +209,11 @@ sort | Number | 否 | 排序值
   "state": 1,
   "content": {
     "__v": 0,
-    "updatedAt": "2017-05-19T17:03:21.121Z",
-    "createdAt": "2017-05-19T17:03:21.121Z",
+    "updatedAt": "2017-05-19T17:27:12.070Z",
+    "createdAt": "2017-05-19T17:27:12.070Z",
     "name": "综艺",
-    "creater": "591f2559cd6c392364d4247b",
-    "_id": "591f2559cd6c392364d4247d",
+    "creater": "591f2af0b119a70730e3d92d",
+    "_id": "591f2af0b119a70730e3d92f",
     "sort": 12,
     "deleted": false
   }
@@ -182,16 +222,22 @@ sort | Number | 否 | 排序值
 ### *删除分类*
 #### 接口：`DELETE` /request/type
 #### 参数
+
+
+
 参数名 | 类型 | 是否必填 | 说明
 --- | --- | --- | ---
 _id | String | 是 | 分类Id
+
+
+
 #### 使用示例
 
 请求参数：
 
 ```json
 {
-  "_id": "591f2559cd6c392364d4247f"
+  "_id": "591f2af0b119a70730e3d931"
 }
 ```
 

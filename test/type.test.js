@@ -113,7 +113,7 @@ describe('API-Type', () => {
           agent: request,
           file: 'type',
           group: '分类相关API',
-          title: '新增分类',
+          title: '*修改分类*',
           method: 'post',
           url: '/request/type',
           headers: { Authorization: `Bearer ${this.token}` },

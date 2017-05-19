@@ -43,12 +43,14 @@ exports.test = async (obj) => {
       return [param, type, requiredText, desc];
     });
     mdJson.push({ h4: '参数' });
+    mdJson.push({ p: '' });
     mdJson.push({
       table: {
         headers: ['参数名', '类型', '是否必填', '说明'],
         rows,
       },
     });
+    mdJson.push({ p: '' });
   }
   mdJson.push({ h4: '使用示例' });
   mdJson.push({
