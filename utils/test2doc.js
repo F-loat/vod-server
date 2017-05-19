@@ -1,43 +1,69 @@
 const path = require('path');
 const fs = require('fs');
+const json2md = require("json2md");
 
-const indexMdStr = {};
-const mdStr = {};
-module.exports = async (obj) => {
-  if (!indexMdStr[obj.group]) {
-    indexMdStr[obj.group] = '# API文档 \n';
-    indexMdStr[obj.group] += `\n## [${obj.group}](./${obj.file}) \n`;
-  }
-  indexMdStr[obj.group] += `* [${obj.title}](./${obj.file}#${obj.title.replace(/\*/g, '')}) \n`;
+json2md.converters.a = input => `[${input.title}](${input.href})`;
 
-  if (!mdStr[obj.group]) {
-    mdStr[obj.group] = '';
-    mdStr[obj.group] += `## ${obj.group} \n\n`;
+const groups = {};
+
+exports.test = async (obj) => {
+  const { title, file } = obj;
+
+  if (!groups[obj.group]) {
+    groups[obj.group] = {
+      file,
+      mdJson: [{ h2: obj.group }],
+      links: [],
+    };
   }
+
+  const group = groups[obj.group];
+  const mdJson = group.mdJson;
   const fields = {};
 
-  mdStr[obj.group] += `### ${obj.title} \n`;
-  mdStr[obj.group] += `#### 接口：\`${obj.method.toUpperCase()}\` ${obj.url} \n`;
+  group.links.push({
+    a: {
+      title,
+      href: `./${file}#${title.replace(/\*/g, '')}`,
+    },
+  });
+
+
+  mdJson.push({ h3: title });
+  mdJson.push({
+    h4: `接口：\`${obj.method.toUpperCase()}\` ${obj.url}`,
+  });
 
   if (obj.params) {
-    mdStr[obj.group] += '\n#### 参数\n';
-    mdStr[obj.group] += '\n参数名 | 类型 | 是否必填 | 说明\n-----|-----|-----|-----\n';
-    Object.keys(obj.params).forEach((param) => {
+    const rows = Object.keys(obj.params).map((param) => {
       const paramVal = obj.params[param];
+      const { type, required, desc } = paramVal;
+      const requiredText = required ? '是' : '否';
       fields[param] = paramVal.value;
-      mdStr[obj.group] += `${param} | ${paramVal.type} | ${paramVal.required ? '是' : '否'} | ${paramVal.desc} \n`;
+      return [param, type, requiredText, desc];
+    });
+    mdJson.push({ h4: '参数' });
+    mdJson.push({
+      table: {
+        headers: ['参数名', '类型', '是否必填', '说明'],
+        rows,
+      },
     });
   }
-  mdStr[obj.group] += '\n#### 使用示例\n\n请求参数：\n';
+  mdJson.push({ h4: '使用示例' });
+  mdJson.push({
+    p: `请求参数：${obj.params ? '' : '无'}`,
+  });
 
   if (obj.params) {
-    mdStr[obj.group] += '\n```json\n';
-    mdStr[obj.group] += JSON.stringify(fields, null, 2);
-    mdStr[obj.group] += '\n```\n';
-  } else {
-    mdStr[obj.group] += '无\n';
+    mdJson.push({
+      code: {
+        language: 'json',
+        content: JSON.stringify(fields, null, 2),
+      },
+    });
   }
-  mdStr[obj.group] += '\n返回结果：\n\n';
+  mdJson.push({ p: '返回结果：' });
 
   if (obj.url.indexOf(':') > -1) {
     obj.url = obj.url.replace(/:\w*/g, word =>
@@ -50,14 +76,35 @@ module.exports = async (obj) => {
     .query(normalizedFields)
     .send(normalizedFields)
     .expect(obj.expect);
-  mdStr[obj.group] += '```json\n';
-  mdStr[obj.group] += JSON.stringify(res.body, null, 2);
-  mdStr[obj.group] += '\n```\n';
-  mdStr[obj.group] += '\n';
-
-  if (process.env.GEN_DOC > 0) {
-    fs.writeFileSync(path.resolve('./docs/', `${obj.file}.md`), mdStr[obj.group]);
-    fs.writeFileSync('./docs/index.md', indexMdStr[obj.group]);
-  }
+  mdJson.push({
+    code: {
+      language: 'json',
+      content: JSON.stringify(res.body, null, 2),
+    },
+  });
   return res;
 };
+
+exports.generate = async () => {
+  const keys = Object.keys(groups);
+  const indexJson = [{ h1: 'API文档' }];
+  keys.forEach((key) => {
+    const group = groups[key];
+    const filePath = path.resolve('./docs/', `${group.file}.md`);
+
+    indexJson.push({
+      h2: {
+        a: {
+          title: key,
+          href: `./${group.file}#${key}`,
+        },
+      }
+    });
+    indexJson.push({ ul: group.links });
+    indexJson.push({ p: '' });
+
+    fs.writeFileSync(filePath, json2md(group.mdJson));
+  })
+  indexJson.push({ p: '标题为斜体字的接口需要管理员权限' });
+  fs.writeFileSync('./docs/index.md', json2md(indexJson));
+}

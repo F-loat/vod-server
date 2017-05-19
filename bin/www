@@ -4,35 +4,16 @@
  * Module dependencies.
  */
 
-var app = require('../app');
-var http = require('http');
-var log = require('../utils/log');
-
-/**
- * Get port from environment and store in Express.
- */
-
-var port = normalizePort(process.env.PORT || '7517');
-
-/**
- * Create HTTP server.
- */
-
-var server = http.createServer(app.callback());
-
-/**
- * Listen on provided port, on all network interfaces.
- */
-
-server.listen(port);
-server.on('error', onError);
+const app = require('../app');
+const http = require('http');
+const log = require('../utils/log');
 
 /**
  * Normalize a port into a number, string, or false.
  */
 
 function normalizePort(val) {
-  var port = parseInt(val, 10);
+  const port = parseInt(val, 10);
 
   if (isNaN(port)) {
     // named pipe
@@ -56,7 +37,7 @@ function onError(error) {
     throw error;
   }
 
-  var bind = typeof port === 'string'
+  const bind = typeof port === 'string'
     ? 'Pipe ' + port
     : 'Port ' + port;
 
@@ -74,3 +55,24 @@ function onError(error) {
       throw error;
   }
 }
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+const port = normalizePort(process.env.PORT || '7517');
+
+/**
+ * Create HTTP server.
+ */
+
+const server = http.createServer(app.callback());
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(port);
+server.on('error', onError);
+
+module.exports = server;
