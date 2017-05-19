@@ -161,7 +161,7 @@ describe('API-Video', () => {
           agent: request,
           file: 'video',
           group: '视频相关API',
-          title: '新增视频*',
+          title: '*新增视频*',
           method: 'post',
           url: '/request/video',
           headers: {
@@ -253,7 +253,7 @@ describe('API-Video', () => {
           agent: request,
           file: 'video',
           group: '视频相关API',
-          title: '修改视频*',
+          title: '*修改视频*',
           method: 'put',
           url: '/request/video',
           headers: {
@@ -351,7 +351,7 @@ describe('API-Video', () => {
           agent: request,
           file: 'video',
           group: '视频相关API',
-          title: '删除视频*',
+          title: '*删除视频*',
           method: 'delete',
           url: '/request/video',
           headers: { Authorization: `Bearer ${this.token}` },

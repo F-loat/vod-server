@@ -1,8 +1,14 @@
-## 视频相关API
+## 视频相关API 
 
-### 获取视频列表（已分类） `get` /request/video/typed 
+### 获取视频列表（已分类） 
+#### 接口：`GET` /request/video/typed 
 
-返回结果:
+#### 使用示例
+
+请求参数：
+无
+
+返回结果：
 
 ```json
 {
@@ -11,13 +17,13 @@
     {
       "videos": [
         {
-          "_id": "591ddd97e1bf9b14049ea5ec",
+          "_id": "591e7800021d362130096ac4",
           "title": "测试",
-          "posterPath": "poster/2017/5/17/1495129495303"
+          "posterPath": "poster/2017/5/17/1495169024187"
         }
       ],
       "type": {
-        "_id": "591ddd97e1bf9b14049ea5eb",
+        "_id": "591e7800021d362130096ac3",
         "name": "电影"
       }
     }
@@ -25,7 +31,8 @@
 }
 ```
 
-### 获取视频列表 `get` /request/video/list 
+### 获取视频列表 
+#### 接口：`GET` /request/video/list 
 
 #### 参数
 
@@ -38,18 +45,18 @@ search | String | 否 | 搜索条件
 
 #### 使用示例
 
-请求参数: 
+请求参数：
 
 ```json
 {
-  "type": "591ddd97e1bf9b14049ea5ee",
+  "type": "591e7800021d362130096ac6",
   "limit": 10,
   "page": 1,
   "search": "测"
 }
 ```
 
-返回结果:
+返回结果：
 
 ```json
 {
@@ -57,22 +64,22 @@ search | String | 否 | 搜索条件
   "content": {
     "videos": [
       {
-        "_id": "591ddd97e1bf9b14049ea5ef",
-        "updatedAt": "2017-05-18T17:44:55.639Z",
-        "createdAt": "2017-05-18T17:44:55.639Z",
+        "_id": "591e7800021d362130096ac7",
+        "updatedAt": "2017-05-19T04:43:44.296Z",
+        "createdAt": "2017-05-19T04:43:44.296Z",
         "title": "测试",
-        "posterPath": "poster/2017/5/17/1495129495636",
+        "posterPath": "poster/2017/5/17/1495169024295",
         "summary": "测试",
         "year": "2017",
         "creater": {
-          "_id": "591ddd97e1bf9b14049ea5ed",
+          "_id": "591e7800021d362130096ac5",
           "stuid": "000000"
         },
         "__v": 0,
         "sort": 7,
         "deleted": false,
         "type": [
-          "591ddd97e1bf9b14049ea5ee"
+          "591e7800021d362130096ac6"
         ],
         "wishCount": 0,
         "commentsCount": 0,
@@ -100,7 +107,8 @@ search | String | 否 | 搜索条件
 }
 ```
 
-### 获取视频详情 `get` /request/video 
+### 获取视频详情 
+#### 接口：`GET` /request/video 
 
 #### 参数
 
@@ -110,33 +118,33 @@ _id | String | 是 | 视频Id
 
 #### 使用示例
 
-请求参数: 
+请求参数：
 
 ```json
 {
-  "_id": "591ddd97e1bf9b14049ea5f2"
+  "_id": "591e7800021d362130096aca"
 }
 ```
 
-返回结果:
+返回结果：
 
 ```json
 {
   "state": 1,
   "content": {
-    "_id": "591ddd97e1bf9b14049ea5f2",
-    "updatedAt": "2017-05-18T17:44:55.809Z",
-    "createdAt": "2017-05-18T17:44:55.809Z",
+    "_id": "591e7800021d362130096aca",
+    "updatedAt": "2017-05-19T04:43:44.397Z",
+    "createdAt": "2017-05-19T04:43:44.397Z",
     "title": "测试",
-    "posterPath": "poster/2017/5/17/1495129495807",
+    "posterPath": "poster/2017/5/17/1495169024395",
     "summary": "测试",
     "year": "2017",
-    "creater": "591ddd97e1bf9b14049ea5f0",
+    "creater": "591e7800021d362130096ac8",
     "__v": 0,
     "sort": 7,
     "deleted": false,
     "type": [
-      "591ddd97e1bf9b14049ea5f1"
+      "591e7800021d362130096ac9"
     ],
     "wishCount": 0,
     "commentsCount": 0,
@@ -161,7 +169,8 @@ _id | String | 是 | 视频Id
 }
 ```
 
-### 新增视频* `post` /request/video 
+### *新增视频* 
+#### 接口：`POST` /request/video 
 
 #### 参数
 
@@ -181,7 +190,7 @@ sort | String | 是 | 排序值
 
 #### 使用示例
 
-请求参数: 
+请求参数：
 
 ```json
 {
@@ -190,16 +199,16 @@ sort | String | 是 | 排序值
   "performers": "测试,测试",
   "countries": "测试,测试",
   "directors": "测试,测试",
-  "poster": "poster/2017/5/17/1495129495879",
+  "poster": "poster/2017/5/17/1495169024465",
   "summary": "测试",
   "year": "2017",
-  "type": "591ddd97e1bf9b14049ea5f4",
-  "creater": "591ddd97e1bf9b14049ea5f3",
+  "type": "591e7800021d362130096acc",
+  "creater": "591e7800021d362130096acb",
   "sort": 6
 }
 ```
 
-返回结果:
+返回结果：
 
 ```json
 {
@@ -208,7 +217,8 @@ sort | String | 是 | 排序值
 }
 ```
 
-### 修改视频* `put` /request/video 
+### *修改视频* 
+#### 接口：`PUT` /request/video 
 
 #### 参数
 
@@ -229,44 +239,44 @@ sort | String | 是 | 排序值
 
 #### 使用示例
 
-请求参数: 
+请求参数：
 
 ```json
 {
-  "_id": "591ddd97e1bf9b14049ea5f9",
+  "_id": "591e7800021d362130096ad1",
   "title": "修改",
   "aka": "修改,修改",
   "performers": "修改,修改",
   "countries": "修改,修改",
   "directors": "修改,修改",
-  "poster": "poster/2017/5/17/1495129495980",
+  "poster": "poster/2017/5/17/1495169024580",
   "summary": "修改",
   "year": "2018",
-  "type": "591ddd97e1bf9b14049ea5f8",
-  "creater": "591ddd97e1bf9b14049ea5f7",
+  "type": "591e7800021d362130096ad0",
+  "creater": "591e7800021d362130096acf",
   "sort": 6
 }
 ```
 
-返回结果:
+返回结果：
 
 ```json
 {
   "state": 1,
   "content": {
-    "_id": "591ddd97e1bf9b14049ea5f9",
-    "updatedAt": "2017-05-18T17:44:55.998Z",
-    "createdAt": "2017-05-18T17:44:55.973Z",
+    "_id": "591e7800021d362130096ad1",
+    "updatedAt": "2017-05-19T04:43:44.602Z",
+    "createdAt": "2017-05-19T04:43:44.575Z",
     "title": "修改",
-    "posterPath": "poster/2017/5/17/1495129495969",
+    "posterPath": "poster/2017/5/17/1495169024571",
     "summary": "修改",
     "year": "2018",
-    "creater": "591ddd97e1bf9b14049ea5f7",
+    "creater": "591e7800021d362130096acf",
     "__v": 0,
     "sort": 6,
     "deleted": false,
     "type": [
-      "591ddd97e1bf9b14049ea5f8"
+      "591e7800021d362130096ad0"
     ],
     "wishCount": 0,
     "commentsCount": 0,
@@ -291,7 +301,8 @@ sort | String | 是 | 排序值
 }
 ```
 
-### 删除视频* `delete` /request/video 
+### *删除视频* 
+#### 接口：`DELETE` /request/video 
 
 #### 参数
 
@@ -301,15 +312,15 @@ _id | String | 是 | 视频Id
 
 #### 使用示例
 
-请求参数: 
+请求参数：
 
 ```json
 {
-  "_id": "591ddd98e1bf9b14049ea5fc"
+  "_id": "591e7800021d362130096ad4"
 }
 ```
 
-返回结果:
+返回结果：
 
 ```json
 {
