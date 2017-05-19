@@ -1,7 +1,7 @@
-const app = require('../app');
 const supertest = require('supertest');
+const server = require('../bin/www');
 const redis = require('../utils/redis');
-const test = require('../utils/test2doc');
+const t2d = require('../utils/test2doc');
 const createToken = require('../utils/token').create;
 const jwt = require('jwt-simple');
 const User = require('../models/user');
@@ -9,7 +9,7 @@ const Type = require('../models/type');
 const Video = require('../models/video');
 require('chai').should();
 
-const request = supertest.agent(app.listen(3000));
+const request = supertest.agent(server);
 
 describe('API-Video', () => {
   beforeEach(async () => {
@@ -52,12 +52,15 @@ describe('API-Video', () => {
     this.type = null;
     this.video = null;
   });
+  after(async () => {
+    if (process.env.GEN_DOC > 0) t2d.generate();
+  });
 
   describe('getTypedVideoList', () => {
     redis.expire('videoTypedLists', 0);
     it('should return typed video list', async () => {
       try {
-        const res = await test({
+        const res = await t2d.test({
           agent: request,
           file: 'video',
           group: '视频相关API',
@@ -81,7 +84,7 @@ describe('API-Video', () => {
   describe('getVideoList', () => {
     it('should return video list', async () => {
       try {
-        const res = await test({
+        const res = await t2d.test({
           agent: request,
           file: 'video',
           group: '视频相关API',
@@ -128,7 +131,7 @@ describe('API-Video', () => {
   describe('getVideoDetail', () => {
     it('should return video detail info', async () => {
       try {
-        const res = await test({
+        const res = await t2d.test({
           agent: request,
           file: 'video',
           group: '视频相关API',
@@ -157,7 +160,7 @@ describe('API-Video', () => {
   describe('addVideo', () => {
     it('should return add status', async () => {
       try {
-        const res = await test({
+        const res = await t2d.test({
           agent: request,
           file: 'video',
           group: '视频相关API',
@@ -249,7 +252,7 @@ describe('API-Video', () => {
   describe('updateVideo', () => {
     it('should return modified video info', async () => {
       try {
-        const res = await test({
+        const res = await t2d.test({
           agent: request,
           file: 'video',
           group: '视频相关API',
@@ -347,7 +350,7 @@ describe('API-Video', () => {
   describe('delVideo', () => {
     it('should return delete status', async () => {
       try {
-        const res = await test({
+        const res = await t2d.test({
           agent: request,
           file: 'video',
           group: '视频相关API',
