@@ -4,6 +4,7 @@ const logger = require('log4js').getLogger('DPlayer');
 const Danmaku = require('../models/danmaku');
 
 exports.list = (ctx) => {
+  ctx.body = {};
   Danmaku.distinct('player', (err, data) => {
     if (err) {
       logger.log(err);
@@ -18,6 +19,7 @@ exports.list = (ctx) => {
 };
 
 exports.detail = async (ctx) => {
+  ctx.body = {};
   const ip = ctx.headers['x-forwarded-for'] ||
     ctx.socket.remoteAddress;
 
@@ -58,8 +60,10 @@ function htmlEncode(str) {
 
 const postIP = [];
 
-exports.add = (ctx) => {
-  let body = '';
+exports.add = async (ctx) => {
+  ctx.body = {};
+
+  const body = ctx.request.body;
   let jsonStr = {};
   const ip = ctx.headers['x-forwarded-for'] ||
     ctx.socket.remoteAddress;
@@ -81,52 +85,36 @@ exports.add = (ctx) => {
   postIP.push(ip);
   setTimeout(() => postIP.splice(0, 1), 1000);
 
-  function dataListener(chunk) {
-    body += chunk;
+  try {
+    jsonStr = typeof(body) === 'string' ? JSON.parse(body) : body;
+  } catch (err) {
+    jsonStr = {};
   }
-  function endListener() {
-    ctx.request.removeListener('data', dataListener);
-    ctx.request.removeListener('end', endListener);
-    try {
-      jsonStr = JSON.parse(body);
-    } catch (err) {
-      jsonStr = {};
-    }
 
-    // check data
-    if (jsonStr.player === undefined
-      || jsonStr.author === undefined
-      || jsonStr.time === undefined
-      || jsonStr.text === undefined
-      || jsonStr.color === undefined
-      || jsonStr.type === undefined
-      || jsonStr.text.length >= 30) {
-      logger.info(`Reject POST form ${ip} for illegal data: ${JSON.stringify(jsonStr)}`);
-      ctx.body = '{"code": -3, "msg": "Rejected for illegal data"}';
-      return;
-    }
+  // check data
+  if (jsonStr.player === undefined
+    || jsonStr.author === undefined
+    || jsonStr.time === undefined
+    || jsonStr.text === undefined
+    || jsonStr.color === undefined
+    || jsonStr.type === undefined
+    || jsonStr.text.length >= 30) {
+    logger.info(`Reject POST form ${ip} for illegal data: ${JSON.stringify(jsonStr)}`);
+    ctx.body = '{"code": -3, "msg": "Rejected for illegal data"}';
+    return;
+  }
 
-    // check token: set it yourself
-    function checkToken(token) {
-      console.log(token);
-      return true;
-    }
-    if (!checkToken(jsonStr.token)) {
-      logger.info(`Rejected POST form ${ip} for illegal token: ${jsonStr.token}`);
-      ctx.body = `{"code": -4, "msg": "Rejected for illegal token: ${jsonStr.token}"}`;
-      return;
-    }
+  // check black username
+  if (blanklist.indexOf(jsonStr.author) !== -1) {
+    logger.info(`Reject POST form ${jsonStr.author} for black user.`);
+    ctx.body = '{"code": -5, "msg": "Rejected for black user."}';
+    return;
+  }
 
-    // check black username
-    if (blanklist.indexOf(jsonStr.author) !== -1) {
-      logger.info(`Reject POST form ${jsonStr.author} for black user.`);
-      ctx.body = '{"code": -5, "msg": "Rejected for black user."}';
-      return;
-    }
+  logger.info(`POST form ${ip}, data: ${JSON.stringify(jsonStr)}`);
 
-    logger.info(`POST form ${ip}, data: ${JSON.stringify(jsonStr)}`);
-
-    const dan = new Danmaku({
+  try {
+    const dan = await Danmaku.create({
       player: htmlEncode(jsonStr.player),
       author: htmlEncode(jsonStr.author),
       time: jsonStr.time,
@@ -136,17 +124,10 @@ exports.add = (ctx) => {
       ip,
       referer: ctx.headers.referer,
     });
-    dan.save((err, d) => {
-      if (err) {
-        logger.error(err);
-        ctx.body = '{"code": 0, "msg": "Error happens, please contact system administrator."}';
-      } else {
-        ctx.body = `{"code": 1, "data": ${JSON.stringify(d)}}`;
-        redis.del(`dplayer${htmlEncode(jsonStr.player)}`);
-      }
-    });
+    ctx.body = `{"code": 1, "data": ${JSON.stringify(dan)}}`;
+    redis.del(`dplayer${htmlEncode(jsonStr.player)}`);
+  } catch (err) {
+    logger.error(err);
+    ctx.body = '{"code": 0, "msg": "Error happens, please contact system administrator."}';
   }
-
-  ctx.request.on('data', dataListener);
-  ctx.request.on('end', endListener);
 };

@@ -3,7 +3,6 @@ const server = require('../bin/www');
 const redis = require('../utils/redis');
 const t2d = require('../utils/test2doc');
 const createToken = require('../utils/token').create;
-const jwt = require('jwt-simple');
 const User = require('../models/user');
 const Type = require('../models/type');
 const Video = require('../models/video');
@@ -57,14 +56,14 @@ describe('API-Video', () => {
   });
 
   describe('getTypedVideoList', () => {
-    redis.expire('videoTypedLists', 0);
+    redis.del('videoTypedLists');
     it('should return typed video list', async () => {
       try {
         const res = await t2d.test({
           agent: request,
           file: 'video',
           group: '视频相关API',
-          title: '获取视频列表（已分类）',
+          title: '获取分类视频列表',
           method: 'get',
           url: '/request/video/typed',
           headers: { Accept: 'application/json' },
@@ -243,6 +242,7 @@ describe('API-Video', () => {
         });
         const body = res.body;
         body.should.have.deep.property('state', 1);
+        Video.remove({ _id: body.content._id }).exec();
       } catch (err) {
         console.log(err);
       }

@@ -1,5 +1,5 @@
 ## 视频相关API
-### 获取视频列表（已分类）
+### 获取分类视频列表
 #### 接口：`GET` /request/video/typed
 #### 使用示例
 
@@ -13,78 +13,15 @@
   "state": 1,
   "content": [
     {
-      "videos": [],
-      "type": {
-        "_id": "591f217adabb3e14204bdb88",
-        "name": "电影"
-      }
-    },
-    {
-      "videos": [],
-      "type": {
-        "_id": "591f225ceab50b2d78f7164e",
-        "name": "电影"
-      }
-    },
-    {
-      "videos": [],
-      "type": {
-        "_id": "591f231f4f32922dbcdf7f1f",
-        "name": "电影"
-      }
-    },
-    {
-      "videos": [],
-      "type": {
-        "_id": "591f234a7786ec1c145c87b8",
-        "name": "电影"
-      }
-    },
-    {
-      "videos": [],
-      "type": {
-        "_id": "591f23697dc2a916bcdd63c3",
-        "name": "电影"
-      }
-    },
-    {
-      "videos": [],
-      "type": {
-        "_id": "591f24fdae51351c94a55805",
-        "name": "电影"
-      }
-    },
-    {
-      "videos": [],
-      "type": {
-        "_id": "591f2559cd6c392364d4247a",
-        "name": "电影"
-      }
-    },
-    {
-      "videos": [],
-      "type": {
-        "_id": "591f2a790d05d70128829ed0",
-        "name": "电影"
-      }
-    },
-    {
-      "videos": [],
-      "type": {
-        "_id": "591f2af0b119a70730e3d92c",
-        "name": "电影"
-      }
-    },
-    {
       "videos": [
         {
-          "_id": "591f2af0b119a70730e3d934",
+          "_id": "591feb05c9984406244a651c",
           "title": "测试",
-          "posterPath": "poster/2017/5/17/1495214832194"
+          "posterPath": "poster/2017/5/17/1495264005199"
         }
       ],
       "type": {
-        "_id": "591f2af0b119a70730e3d933",
+        "_id": "591feb05c9984406244a651b",
         "name": "电影"
       }
     }
@@ -112,7 +49,7 @@ search | String | 否 | 搜索条件
 
 ```json
 {
-  "type": "591f2af0b119a70730e3d936",
+  "type": "591feb05c9984406244a651e",
   "limit": 10,
   "page": 1,
   "search": "测"
@@ -127,22 +64,22 @@ search | String | 否 | 搜索条件
   "content": {
     "videos": [
       {
-        "_id": "591f2af0b119a70730e3d937",
-        "updatedAt": "2017-05-19T17:27:12.281Z",
-        "createdAt": "2017-05-19T17:27:12.281Z",
+        "_id": "591feb05c9984406244a651f",
+        "updatedAt": "2017-05-20T07:06:45.231Z",
+        "createdAt": "2017-05-20T07:06:45.231Z",
         "title": "测试",
-        "posterPath": "poster/2017/5/17/1495214832278",
+        "posterPath": "poster/2017/5/17/1495264005231",
         "summary": "测试",
         "year": "2017",
         "creater": {
-          "_id": "591f2af0b119a70730e3d935",
+          "_id": "591feb05c9984406244a651d",
           "stuid": "000000"
         },
         "__v": 0,
-        "sort": 7,
+        "sort": 0,
         "deleted": false,
         "type": [
-          "591f2af0b119a70730e3d936"
+          "591feb05c9984406244a651e"
         ],
         "wishCount": 0,
         "commentsCount": 0,
@@ -187,7 +124,7 @@ _id | String | 是 | 视频Id
 
 ```json
 {
-  "_id": "591f2af0b119a70730e3d93a"
+  "_id": "591feb05c9984406244a6522"
 }
 ```
 
@@ -197,19 +134,19 @@ _id | String | 是 | 视频Id
 {
   "state": 1,
   "content": {
-    "_id": "591f2af0b119a70730e3d93a",
-    "updatedAt": "2017-05-19T17:27:12.388Z",
-    "createdAt": "2017-05-19T17:27:12.388Z",
+    "_id": "591feb05c9984406244a6522",
+    "updatedAt": "2017-05-20T07:06:45.248Z",
+    "createdAt": "2017-05-20T07:06:45.248Z",
     "title": "测试",
-    "posterPath": "poster/2017/5/17/1495214832386",
+    "posterPath": "poster/2017/5/17/1495264005247",
     "summary": "测试",
     "year": "2017",
-    "creater": "591f2af0b119a70730e3d938",
+    "creater": "591feb05c9984406244a6520",
     "__v": 0,
-    "sort": 7,
+    "sort": 0,
     "deleted": false,
     "type": [
-      "591f2af0b119a70730e3d939"
+      "591feb05c9984406244a6521"
     ],
     "wishCount": 0,
     "commentsCount": 0,
@@ -266,11 +203,11 @@ sort | String | 是 | 排序值
   "performers": "测试,测试",
   "countries": "测试,测试",
   "directors": "测试,测试",
-  "poster": "poster/2017/5/17/1495214832446",
+  "poster": "poster/2017/5/17/1495264005265",
   "summary": "测试",
   "year": "2017",
-  "type": "591f2af0b119a70730e3d93c",
-  "creater": "591f2af0b119a70730e3d93b",
+  "type": "591feb05c9984406244a6524",
+  "creater": "591feb05c9984406244a6523",
   "sort": 6
 }
 ```
@@ -280,7 +217,40 @@ sort | String | 是 | 排序值
 ```json
 {
   "state": 1,
-  "content": true
+  "content": {
+    "__v": 0,
+    "updatedAt": "2017-05-20T07:06:45.271Z",
+    "createdAt": "2017-05-20T07:06:45.271Z",
+    "title": "测试",
+    "summary": "测试",
+    "year": "2017",
+    "creater": "591feb05c9984406244a6523",
+    "_id": "591feb05c9984406244a6526",
+    "sort": 6,
+    "deleted": false,
+    "type": [
+      "591feb05c9984406244a6524"
+    ],
+    "wishCount": 0,
+    "commentsCount": 0,
+    "collectCount": 0,
+    "directors": [
+      "测试",
+      "测试"
+    ],
+    "countries": [
+      "测试",
+      "测试"
+    ],
+    "performers": [
+      "测试",
+      "测试"
+    ],
+    "aka": [
+      "测试",
+      "测试"
+    ]
+  }
 }
 ```
 ### *修改视频*
@@ -312,17 +282,17 @@ sort | String | 是 | 排序值
 
 ```json
 {
-  "_id": "591f2af0b119a70730e3d941",
+  "_id": "591feb05c9984406244a6529",
   "title": "修改",
   "aka": "修改,修改",
   "performers": "修改,修改",
   "countries": "修改,修改",
   "directors": "修改,修改",
-  "poster": "poster/2017/5/17/1495214832539",
+  "poster": "poster/2017/5/17/1495264005287",
   "summary": "修改",
   "year": "2018",
-  "type": "591f2af0b119a70730e3d940",
-  "creater": "591f2af0b119a70730e3d93f",
+  "type": "591feb05c9984406244a6528",
+  "creater": "591feb05c9984406244a6527",
   "sort": 6
 }
 ```
@@ -333,19 +303,19 @@ sort | String | 是 | 排序值
 {
   "state": 1,
   "content": {
-    "_id": "591f2af0b119a70730e3d941",
-    "updatedAt": "2017-05-19T17:27:12.554Z",
-    "createdAt": "2017-05-19T17:27:12.535Z",
+    "_id": "591feb05c9984406244a6529",
+    "updatedAt": "2017-05-20T07:06:45.297Z",
+    "createdAt": "2017-05-20T07:06:45.286Z",
     "title": "修改",
-    "posterPath": "poster/2017/5/17/1495214832533",
+    "posterPath": "poster/2017/5/17/1495264005285",
     "summary": "修改",
     "year": "2018",
-    "creater": "591f2af0b119a70730e3d93f",
+    "creater": "591feb05c9984406244a6527",
     "__v": 0,
     "sort": 6,
     "deleted": false,
     "type": [
-      "591f2af0b119a70730e3d940"
+      "591feb05c9984406244a6528"
     ],
     "wishCount": 0,
     "commentsCount": 0,
@@ -387,7 +357,7 @@ _id | String | 是 | 视频Id
 
 ```json
 {
-  "_id": "591f2af0b119a70730e3d944"
+  "_id": "591feb05c9984406244a652c"
 }
 ```
 

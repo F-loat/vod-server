@@ -80,10 +80,9 @@ exports.list = async (ctx) => {
 exports.update = async (ctx) => {
   const { _id, type } = ctx.request.body;
   try {
-    const user = await User
-      .findByIdAndUpdate(_id, {
-        $set: { type },
-      }, { new: true });
+    const user = await User.findByIdAndUpdate(
+      _id, { $set: { type } }, { new: true },
+    );
     ctx.body = { state: 1, content: user };
   } catch (err) {
     logger.error(err);

@@ -53,7 +53,7 @@ exports.add = async (ctx) => {
     sort: lastEpisode ? lastEpisode.sort + index + 1 : 0,
   }));
   await Promise.all(queue);
-  ctx.body = { state: 1, content: true };
+  ctx.body = { state: 1, content: video };
 };
 
 exports.typed = async (ctx) => {

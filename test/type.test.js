@@ -2,7 +2,6 @@ const supertest = require('supertest');
 const server = require('../bin/www');
 const t2d = require('../utils/test2doc');
 const createToken = require('../utils/token').create;
-const jwt = require('jwt-simple');
 const User = require('../models/user');
 const Type = require('../models/type');
 require('chai').should();
@@ -79,7 +78,7 @@ describe('API-Type', () => {
           expect: 200,
           params: {
             name: {
-              value: '电影',
+              value: '电视剧',
               type: 'String',
               required: true,
               desc: '分类名称',
@@ -100,6 +99,7 @@ describe('API-Type', () => {
         });
         const body = res.body;
         body.should.have.deep.property('state', 1);
+        Type.remove({ _id: body.content._id }).exec();
       } catch (err) {
         console.log(err);
       }
@@ -141,6 +141,7 @@ describe('API-Type', () => {
         });
         const body = res.body;
         body.should.have.deep.property('state', 1);
+        Type.remove({ _id: body.content._id }).exec();
       } catch (err) {
         console.log(err);
       }
