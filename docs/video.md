@@ -15,13 +15,13 @@
     {
       "videos": [
         {
-          "_id": "591feb05c9984406244a651c",
+          "_id": "591ff5568394f309e0e9dbc1",
           "title": "测试",
-          "posterPath": "poster/2017/5/17/1495264005199"
+          "posterPath": "poster/2017/5/17/1495266646633"
         }
       ],
       "type": {
-        "_id": "591feb05c9984406244a651b",
+        "_id": "591ff5568394f309e0e9dbc0",
         "name": "电影"
       }
     }
@@ -49,7 +49,7 @@ search | String | 否 | 搜索条件
 
 ```json
 {
-  "type": "591feb05c9984406244a651e",
+  "type": "591ff5568394f309e0e9dbc3",
   "limit": 10,
   "page": 1,
   "search": "测"
@@ -64,22 +64,22 @@ search | String | 否 | 搜索条件
   "content": {
     "videos": [
       {
-        "_id": "591feb05c9984406244a651f",
-        "updatedAt": "2017-05-20T07:06:45.231Z",
-        "createdAt": "2017-05-20T07:06:45.231Z",
+        "_id": "591ff5568394f309e0e9dbc4",
+        "updatedAt": "2017-05-20T07:50:46.694Z",
+        "createdAt": "2017-05-20T07:50:46.694Z",
         "title": "测试",
-        "posterPath": "poster/2017/5/17/1495264005231",
+        "posterPath": "poster/2017/5/17/1495266646693",
         "summary": "测试",
         "year": "2017",
         "creater": {
-          "_id": "591feb05c9984406244a651d",
+          "_id": "591ff5568394f309e0e9dbc2",
           "stuid": "000000"
         },
         "__v": 0,
         "sort": 0,
         "deleted": false,
         "type": [
-          "591feb05c9984406244a651e"
+          "591ff5568394f309e0e9dbc3"
         ],
         "wishCount": 0,
         "commentsCount": 0,
@@ -124,7 +124,7 @@ _id | String | 是 | 视频Id
 
 ```json
 {
-  "_id": "591feb05c9984406244a6522"
+  "_id": "591ff5568394f309e0e9dbc7"
 }
 ```
 
@@ -134,19 +134,19 @@ _id | String | 是 | 视频Id
 {
   "state": 1,
   "content": {
-    "_id": "591feb05c9984406244a6522",
-    "updatedAt": "2017-05-20T07:06:45.248Z",
-    "createdAt": "2017-05-20T07:06:45.248Z",
+    "_id": "591ff5568394f309e0e9dbc7",
+    "updatedAt": "2017-05-20T07:50:46.717Z",
+    "createdAt": "2017-05-20T07:50:46.717Z",
     "title": "测试",
-    "posterPath": "poster/2017/5/17/1495264005247",
+    "posterPath": "poster/2017/5/17/1495266646717",
     "summary": "测试",
     "year": "2017",
-    "creater": "591feb05c9984406244a6520",
+    "creater": "591ff5568394f309e0e9dbc5",
     "__v": 0,
     "sort": 0,
     "deleted": false,
     "type": [
-      "591feb05c9984406244a6521"
+      "591ff5568394f309e0e9dbc6"
     ],
     "wishCount": 0,
     "commentsCount": 0,
@@ -203,11 +203,11 @@ sort | String | 是 | 排序值
   "performers": "测试,测试",
   "countries": "测试,测试",
   "directors": "测试,测试",
-  "poster": "poster/2017/5/17/1495264005265",
+  "poster": "poster/2017/5/17/1495266646751",
   "summary": "测试",
   "year": "2017",
-  "type": "591feb05c9984406244a6524",
-  "creater": "591feb05c9984406244a6523",
+  "type": "591ff5568394f309e0e9dbc9",
+  "creater": "591ff5568394f309e0e9dbc8",
   "sort": 6
 }
 ```
@@ -219,17 +219,17 @@ sort | String | 是 | 排序值
   "state": 1,
   "content": {
     "__v": 0,
-    "updatedAt": "2017-05-20T07:06:45.271Z",
-    "createdAt": "2017-05-20T07:06:45.271Z",
+    "updatedAt": "2017-05-20T07:50:46.767Z",
+    "createdAt": "2017-05-20T07:50:46.767Z",
     "title": "测试",
     "summary": "测试",
     "year": "2017",
-    "creater": "591feb05c9984406244a6523",
-    "_id": "591feb05c9984406244a6526",
+    "creater": "591ff5568394f309e0e9dbc8",
+    "_id": "591ff5568394f309e0e9dbcb",
     "sort": 6,
     "deleted": false,
     "type": [
-      "591feb05c9984406244a6524"
+      "591ff5568394f309e0e9dbc9"
     ],
     "wishCount": 0,
     "commentsCount": 0,
@@ -282,17 +282,17 @@ sort | String | 是 | 排序值
 
 ```json
 {
-  "_id": "591feb05c9984406244a6529",
+  "_id": "591ff5568394f309e0e9dbce",
   "title": "修改",
   "aka": "修改,修改",
   "performers": "修改,修改",
   "countries": "修改,修改",
   "directors": "修改,修改",
-  "poster": "poster/2017/5/17/1495264005287",
+  "poster": "poster/2017/5/17/1495266646786",
   "summary": "修改",
   "year": "2018",
-  "type": "591feb05c9984406244a6528",
-  "creater": "591feb05c9984406244a6527",
+  "type": "591ff5568394f309e0e9dbcd",
+  "creater": "591ff5568394f309e0e9dbcc",
   "sort": 6
 }
 ```
@@ -303,19 +303,19 @@ sort | String | 是 | 排序值
 {
   "state": 1,
   "content": {
-    "_id": "591feb05c9984406244a6529",
-    "updatedAt": "2017-05-20T07:06:45.297Z",
-    "createdAt": "2017-05-20T07:06:45.286Z",
+    "_id": "591ff5568394f309e0e9dbce",
+    "updatedAt": "2017-05-20T07:50:46.796Z",
+    "createdAt": "2017-05-20T07:50:46.785Z",
     "title": "修改",
-    "posterPath": "poster/2017/5/17/1495264005285",
+    "posterPath": "poster/2017/5/17/1495266646783",
     "summary": "修改",
     "year": "2018",
-    "creater": "591feb05c9984406244a6527",
+    "creater": "591ff5568394f309e0e9dbcc",
     "__v": 0,
     "sort": 6,
     "deleted": false,
     "type": [
-      "591feb05c9984406244a6528"
+      "591ff5568394f309e0e9dbcd"
     ],
     "wishCount": 0,
     "commentsCount": 0,
@@ -357,7 +357,7 @@ _id | String | 是 | 视频Id
 
 ```json
 {
-  "_id": "591feb05c9984406244a652c"
+  "_id": "591ff5568394f309e0e9dbd1"
 }
 ```
 

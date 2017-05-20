@@ -31,7 +31,7 @@ describe('API-Type', () => {
       sort: lastTopic ? lastTopic.sort + 1 : 0,
     });
     const comment = await Comment.create({
-      subject: type._id,
+      subject: topic._id,
       content: '评论评论评论',
       commenter: user._id,
     });

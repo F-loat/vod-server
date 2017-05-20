@@ -107,6 +107,6 @@ exports.generate = async () => {
 
     fs.writeFileSync(filePath, json2md(group.mdJson));
   })
-  indexJson.push({ p: '标题为斜体字的接口需要管理员权限' });
+  indexJson.push({ p: '*标题为斜体字的接口需要管理员权限' });
   fs.writeFileSync('./docs/index.md', json2md(indexJson));
 }
