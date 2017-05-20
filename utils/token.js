@@ -4,7 +4,7 @@ const logger = require('log4js').getLogger('Token');
 const redis = require('./redis');
 
 exports.create = (user) => {
-  const expires = moment().day(7).valueOf();
+  const expires = moment().add(7, 'days').valueOf();
   return jwt.encode({
     _id: user._id,
     type: user.type,
