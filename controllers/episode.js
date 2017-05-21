@@ -2,42 +2,11 @@ const fs = require('fs');
 const path = require('path');
 const config = require('config');
 const ffmpeg = require('fluent-ffmpeg');
-const Episode = require('../models/episode');
 const logger = require('log4js').getLogger('Episode');
+const Episode = require('../models/episode');
+const transcode = require('../utils/transcode');
 
 const uploadPath = config.get('uploadPath');
-
-function transcode(episode) {
-  const videoPath = path.join(uploadPath, episode.filePath);
-  const parsedPath = path.parse(videoPath);
-  const transPath = path.join(parsedPath.dir, parsedPath.name);
-  const outputPath = path.join(transPath, 'index.m3u8');
-
-  if (!fs.existsSync(transPath)) fs.mkdirSync(transPath);
-  episode.state = 1;
-  episode.save();
-
-  ffmpeg(videoPath)
-    .output(outputPath)
-    .audioCodec('aac')
-    .videoCodec('libx264')
-    .addOption('-hls_time', 10)
-    .addOption('-hls_list_size', 0)
-    .on('end', async () => {
-      fs.unlinkSync(videoPath);
-      episode.state = 2;
-      episode.filePath = path.relative(uploadPath, outputPath);
-      episode.save();
-      const nextEpisode = await Episode.findOne({ state: 0 });
-      if (nextEpisode) transcode(nextEpisode);
-    })
-    .on('error', (err) => {
-      episode.state = -1;
-      episode.save();
-      logger.error(err);
-    })
-    .run();
-}
 
 exports.add = async (ctx) => {
   const file = ctx.req.file || {};
@@ -74,8 +43,27 @@ exports.transcode = async (ctx) => {
     return;
   }
   const episode = await Episode.findById(ctx.request.body._id);
-  transcode(episode);
+  const videoPath = path.join(uploadPath, episode.filePath);
+  const parsedPath = path.parse(videoPath);
+  const transPath = path.join(parsedPath.dir, parsedPath.name);
+  const outputPath = path.join(transPath, 'index.m3u8');
+  episode.state = 1;
+  episode.save();
   ctx.body = { state: 1, content: true };
+  if (!fs.existsSync(transPath)) fs.mkdirSync(transPath);
+  try {
+    await transcode(videoPath, outputPath);
+    fs.unlinkSync(videoPath);
+    episode.state = 2;
+    episode.filePath = path.relative(uploadPath, outputPath);
+    episode.save();
+    const nextEpisode = await Episode.findOne({ state: 0 });
+    if (nextEpisode) transcode(nextEpisode);
+  } catch (err) {
+    episode.state = -1;
+    episode.save();
+    logger.error(err);
+  }
 };
 
 exports.update = async (ctx) => {
