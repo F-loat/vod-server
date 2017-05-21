@@ -86,7 +86,7 @@ exports.add = async (ctx) => {
   setTimeout(() => postIP.splice(0, 1), 1000);
 
   try {
-    jsonStr = typeof(body) === 'string' ? JSON.parse(body) : body;
+    jsonStr = typeof body === 'string' ? JSON.parse(body) : body;
   } catch (err) {
     jsonStr = {};
   }

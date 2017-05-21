@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 const config = require('config');
-const ffmpeg = require('fluent-ffmpeg');
 const logger = require('log4js').getLogger('Episode');
 const Episode = require('../models/episode');
 const transcode = require('../utils/transcode');

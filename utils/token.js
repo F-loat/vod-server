@@ -1,6 +1,6 @@
 const jwt = require('jwt-simple');
 const moment = require('moment');
-const logger = require('log4js').getLogger('Token');
+// const logger = require('log4js').getLogger('Token');
 const redis = require('./redis');
 
 exports.create = (user) => {

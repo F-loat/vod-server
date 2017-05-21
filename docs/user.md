@@ -33,9 +33,9 @@ page | Number | 否 | 查询页数
   "content": {
     "users": [
       {
-        "_id": "591ff5568394f309e0e9dbbc",
-        "updatedAt": "2017-05-20T07:50:46.562Z",
-        "createdAt": "2017-05-20T07:50:46.562Z",
+        "_id": "5921b5cfe1279c04905ee74f",
+        "updatedAt": "2017-05-21T15:44:15.718Z",
+        "createdAt": "2017-05-21T15:44:15.718Z",
         "stuid": "000000",
         "__v": 0,
         "deleted": false,
@@ -61,10 +61,10 @@ page | Number | 否 | 查询页数
   "state": 1,
   "content": {
     "user": {
-      "lastLoginAt": "2017-05-20T07:50:46.583Z",
-      "_id": "591ff5568394f309e0e9dbbd",
-      "updatedAt": "2017-05-20T07:50:46.578Z",
-      "createdAt": "2017-05-20T07:50:46.578Z",
+      "lastLoginAt": "2017-05-21T15:44:15.765Z",
+      "_id": "5921b5cfe1279c04905ee750",
+      "updatedAt": "2017-05-21T15:44:15.753Z",
+      "createdAt": "2017-05-21T15:44:15.753Z",
       "stuid": "000000",
       "__v": 0,
       "deleted": false,
@@ -93,7 +93,7 @@ type | Number | 是 | 用户类型
 
 ```json
 {
-  "_id": "591ff5568394f309e0e9dbbe",
+  "_id": "5921b5cfe1279c04905ee751",
   "type": 12
 }
 ```
@@ -104,9 +104,9 @@ type | Number | 是 | 用户类型
 {
   "state": 1,
   "content": {
-    "_id": "591ff5568394f309e0e9dbbe",
-    "updatedAt": "2017-05-20T07:50:46.600Z",
-    "createdAt": "2017-05-20T07:50:46.588Z",
+    "_id": "5921b5cfe1279c04905ee751",
+    "updatedAt": "2017-05-21T15:44:15.810Z",
+    "createdAt": "2017-05-21T15:44:15.789Z",
     "stuid": "000000",
     "__v": 0,
     "deleted": false,

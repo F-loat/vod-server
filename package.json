@@ -7,12 +7,13 @@
     "lint": "eslint --format node_modules/eslint-friendly-formatter .",
     "test": "mocha --harmony",
     "test:doc": "cross-env GEN_DOC=1 mocha --harmony",
-    "test:cover": "istanbul cover ./node_modules/mocha/bin/_mocha --harmony"
+    "test:cover": "cross-env GEN_DOC=1 istanbul cover ./node_modules/mocha/bin/_mocha --harmony"
   },
   "dependencies": {
     "config": "^1.26.1",
     "fluent-ffmpeg": "^2.1.2",
     "ioredis": "^2.5.0",
+    "json2md": "^1.5.8",
     "jwt-simple": "^0.5.1",
     "koa": "^2.2.0",
     "koa-bodyparser": "^4.2.0",
@@ -34,7 +35,6 @@
     "eslint-friendly-formatter": "^3.0.0",
     "eslint-plugin-import": "^2.2.0",
     "istanbul": "^1.1.0-alpha.1",
-    "json2md": "^1.5.8",
     "mocha": "^3.4.1",
     "nodemon": "^1.11.0",
     "supertest": "^3.0.0"

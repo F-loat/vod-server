@@ -28,17 +28,116 @@ type | String | 否 | 分类类型
   "state": 1,
   "content": [
     {
-      "_id": "591ff5568394f309e0e9dbb3",
-      "updatedAt": "2017-05-20T07:50:46.491Z",
-      "createdAt": "2017-05-20T07:50:46.491Z",
+      "_id": "591f217adabb3e14204bdb88",
+      "updatedAt": "2017-05-19T16:46:50.986Z",
+      "createdAt": "2017-05-19T16:46:50.986Z",
+      "name": "电影",
+      "type": "video",
+      "creater": null,
+      "__v": 0,
+      "sort": 6,
+      "deleted": false
+    },
+    {
+      "_id": "591f225ceab50b2d78f7164e",
+      "updatedAt": "2017-05-19T16:50:36.143Z",
+      "createdAt": "2017-05-19T16:50:36.143Z",
+      "name": "电影",
+      "type": "video",
+      "creater": null,
+      "__v": 0,
+      "sort": 6,
+      "deleted": false
+    },
+    {
+      "_id": "591f231f4f32922dbcdf7f1f",
+      "updatedAt": "2017-05-19T16:53:51.270Z",
+      "createdAt": "2017-05-19T16:53:51.270Z",
+      "name": "电影",
+      "type": "video",
+      "creater": null,
+      "__v": 0,
+      "sort": 6,
+      "deleted": false
+    },
+    {
+      "_id": "591f234a7786ec1c145c87b8",
+      "updatedAt": "2017-05-19T16:54:34.642Z",
+      "createdAt": "2017-05-19T16:54:34.642Z",
+      "name": "电影",
+      "type": "video",
+      "creater": null,
+      "__v": 0,
+      "sort": 6,
+      "deleted": false
+    },
+    {
+      "_id": "591f23697dc2a916bcdd63c3",
+      "updatedAt": "2017-05-19T16:55:05.987Z",
+      "createdAt": "2017-05-19T16:55:05.987Z",
+      "name": "电影",
+      "type": "video",
+      "creater": null,
+      "__v": 0,
+      "sort": 6,
+      "deleted": false
+    },
+    {
+      "_id": "591f24fdae51351c94a55805",
+      "updatedAt": "2017-05-19T17:01:49.815Z",
+      "createdAt": "2017-05-19T17:01:49.815Z",
+      "name": "电影",
+      "type": "video",
+      "creater": null,
+      "__v": 0,
+      "sort": 6,
+      "deleted": false
+    },
+    {
+      "_id": "591f2559cd6c392364d4247a",
+      "updatedAt": "2017-05-19T17:03:21.025Z",
+      "createdAt": "2017-05-19T17:03:21.025Z",
+      "name": "电影",
+      "type": "video",
+      "creater": null,
+      "__v": 0,
+      "sort": 6,
+      "deleted": false
+    },
+    {
+      "_id": "591f2a790d05d70128829ed0",
+      "updatedAt": "2017-05-19T17:25:13.334Z",
+      "createdAt": "2017-05-19T17:25:13.334Z",
+      "name": "电影",
+      "type": "video",
+      "creater": null,
+      "__v": 0,
+      "sort": 6,
+      "deleted": false
+    },
+    {
+      "_id": "591f2af0b119a70730e3d92c",
+      "updatedAt": "2017-05-19T17:27:12.015Z",
+      "createdAt": "2017-05-19T17:27:12.015Z",
+      "name": "电影",
+      "type": "video",
+      "creater": null,
+      "__v": 0,
+      "sort": 6,
+      "deleted": false
+    },
+    {
+      "_id": "5921b5cfe1279c04905ee746",
+      "updatedAt": "2017-05-21T15:44:15.547Z",
+      "createdAt": "2017-05-21T15:44:15.547Z",
       "name": "电影",
       "type": "video",
       "creater": {
-        "_id": "591ff5568394f309e0e9dbb2",
+        "_id": "5921b5cfe1279c04905ee745",
         "stuid": "000000"
       },
       "__v": 0,
-      "sort": 0,
+      "sort": 7,
       "deleted": false
     }
   ]
@@ -77,12 +176,12 @@ sort | Number | 否 | 排序值
   "state": 1,
   "content": {
     "__v": 0,
-    "updatedAt": "2017-05-20T07:50:46.517Z",
-    "createdAt": "2017-05-20T07:50:46.517Z",
+    "updatedAt": "2017-05-21T15:44:15.599Z",
+    "createdAt": "2017-05-21T15:44:15.599Z",
     "name": "电视剧",
     "type": "video",
-    "creater": "591ff5568394f309e0e9dbb4",
-    "_id": "591ff5568394f309e0e9dbb6",
+    "creater": "5921b5cfe1279c04905ee747",
+    "_id": "5921b5cfe1279c04905ee749",
     "sort": 6,
     "deleted": false
   }
@@ -108,7 +207,7 @@ sort | Number | 否 | 排序值
 
 ```json
 {
-  "_id": "591ff5568394f309e0e9dbb8",
+  "_id": "5921b5cfe1279c04905ee74b",
   "name": "综艺",
   "sort": 12
 }
@@ -121,11 +220,11 @@ sort | Number | 否 | 排序值
   "state": 1,
   "content": {
     "__v": 0,
-    "updatedAt": "2017-05-20T07:50:46.534Z",
-    "createdAt": "2017-05-20T07:50:46.534Z",
+    "updatedAt": "2017-05-21T15:44:15.634Z",
+    "createdAt": "2017-05-21T15:44:15.634Z",
     "name": "综艺",
-    "creater": "591ff5568394f309e0e9dbb7",
-    "_id": "591ff5568394f309e0e9dbb9",
+    "creater": "5921b5cfe1279c04905ee74a",
+    "_id": "5921b5cfe1279c04905ee74c",
     "sort": 12,
     "deleted": false
   }
@@ -149,7 +248,7 @@ _id | String | 是 | 分类Id
 
 ```json
 {
-  "_id": "591ff5568394f309e0e9dbbb"
+  "_id": "5921b5cfe1279c04905ee74e"
 }
 ```
 

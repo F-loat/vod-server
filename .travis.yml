@@ -8,7 +8,7 @@ env:
     - CODECOV_TOKEN: d5a600a3-25cd-4edf-8d7d-1c7aeb872fa8
 
 script:
-  - istanbul cover ./node_modules/mocha/bin/_mocha  --harmony
+  - npm run test:cover
   - cat ./coverage/coverage.raw.json | ./node_modules/.bin/codecov
 
 services:

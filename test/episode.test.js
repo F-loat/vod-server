@@ -1,6 +1,5 @@
 const supertest = require('supertest');
 const server = require('../bin/www');
-const redis = require('../utils/redis');
 const t2d = require('../utils/test2doc');
 const createToken = require('../utils/token').create;
 const User = require('../models/user');
@@ -44,8 +43,8 @@ describe('API-Video', () => {
       filePath: 'episode/2017/5/20/hahaha.mp4',
       video: video._id,
       creater: user._id,
-      sort: lastEpisode ? lastEpisode.sort + index + 1 : 0,
-    })
+      sort: lastEpisode ? lastEpisode.sort + 1 : 0,
+    });
     this.user = user;
     this.token = token;
     this.type = type;

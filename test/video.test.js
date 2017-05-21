@@ -271,12 +271,12 @@ describe('API-Video', () => {
               required: true,
               desc: '视频Id',
             },
-              title: {
-                value: '修改',
-                type: 'String',
-                required: true,
-                desc: '标题',
-              },
+            title: {
+              value: '修改',
+              type: 'String',
+              required: true,
+              desc: '标题',
+            },
             aka: {
               value: '修改,修改',
               type: 'String',

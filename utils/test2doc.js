@@ -1,6 +1,6 @@
 const path = require('path');
 const fs = require('fs');
-const json2md = require("json2md");
+const json2md = require('json2md');
 
 json2md.converters.a = input => `[${input.title}](${input.href})`;
 
@@ -100,13 +100,13 @@ exports.generate = async () => {
           title: key,
           href: `./${group.file}#${key}`,
         },
-      }
+      },
     });
     indexJson.push({ ul: group.links });
     indexJson.push({ p: '' });
 
     fs.writeFileSync(filePath, json2md(group.mdJson));
-  })
+  });
   indexJson.push({ p: '*标题为斜体字的接口需要管理员权限' });
   fs.writeFileSync('./docs/index.md', json2md(indexJson));
-}
+};

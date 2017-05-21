@@ -45,7 +45,7 @@ describe('API-Type', () => {
       type: 'right',
       ip: '127.0.0.1',
       referer: 'localhost:test',
-    })
+    });
     this.user = user;
     this.token = token;
     this.type = type;
