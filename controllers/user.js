@@ -5,8 +5,7 @@ const expireToken = require('../utils/token').expire;
 const logger = require('log4js').getLogger('User');
 
 exports.login = async (ctx) => {
-  const stuid = ctx.request.body.stuid;
-  const pwd = ctx.request.body.pwd;
+  const { stuid, pwd } = ctx.request.body;
   const url = 'http://ids1.tjcu.edu.cn/amserver/UI/Login';
   const status = await request.post(url)
     .type('form')
@@ -43,6 +42,10 @@ exports.logout = (ctx) => {
 exports.detail = async (ctx) => {
   const { _id, exp } = ctx.user;
   const user = await User.findById(_id);
+  if (!user) {
+    ctx.body = { state: 0 };
+    return;
+  }
   let token;
   if (exp - Date.now() < 24 * 60 * 60 * 1000) {
     expireToken(ctx.user);

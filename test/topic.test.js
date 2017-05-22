@@ -9,7 +9,7 @@ require('chai').should();
 
 const request = supertest.agent(server);
 
-describe('API-Type', () => {
+describe('API-Topic', () => {
   beforeEach(async () => {
     const user = await User.create({ stuid: '000000' });
     const token = createToken(JSON.parse(JSON.stringify(user)));

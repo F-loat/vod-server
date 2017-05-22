@@ -18,7 +18,7 @@ state | String | 否 | 剧集状态
 
 ```json
 {
-  "videoId": "5921b5cfe1279c04905ee739",
+  "videoId": "59226658773c2a2d88c11029",
   "state": "[0]"
 }
 ```
@@ -30,14 +30,14 @@ state | String | 否 | 剧集状态
   "state": 1,
   "content": [
     {
-      "_id": "5921b5cfe1279c04905ee73a",
-      "updatedAt": "2017-05-21T15:44:15.302Z",
-      "createdAt": "2017-05-21T15:44:15.302Z",
+      "_id": "59226658773c2a2d88c1102a",
+      "updatedAt": "2017-05-22T04:17:28.309Z",
+      "createdAt": "2017-05-22T04:17:28.309Z",
       "name": "测试",
       "filePath": "episode/2017/5/20/hahaha.mp4",
-      "video": "5921b5cfe1279c04905ee739",
+      "video": "59226658773c2a2d88c11029",
       "creater": {
-        "_id": "5921b5cfe1279c04905ee737",
+        "_id": "59226658773c2a2d88c11027",
         "stuid": "000000"
       },
       "__v": 0,

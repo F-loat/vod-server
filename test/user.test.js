@@ -2,12 +2,13 @@ const supertest = require('supertest');
 const server = require('../bin/www');
 const t2d = require('../utils/test2doc');
 const createToken = require('../utils/token').create;
+const verifyToken = require('../utils/token').verify;
 const User = require('../models/user');
 require('chai').should();
 
 const request = supertest.agent(server);
 
-describe('API-Type', () => {
+describe('API-User', () => {
   beforeEach(async () => {
     const user = await User.create({ stuid: '000000', type: 10 });
     const token = createToken(JSON.parse(JSON.stringify(user)));
@@ -19,6 +20,40 @@ describe('API-Type', () => {
     User.remove({ _id: user._id }).exec();
     this.user = null;
     this.token = null;
+  });
+
+  describe('userLogin', () => {
+    it('should return login status', async () => {
+      try {
+        const res = await t2d.test({
+          agent: request,
+          file: 'user',
+          group: '用户相关API',
+          title: '用户登录',
+          method: 'post',
+          url: '/request/user/login',
+          expect: 200,
+          params: {
+            stuid: {
+              value: '00000000',
+              type: 'String',
+              required: true,
+              desc: '学号',
+            },
+            pwd: {
+              value: 'test',
+              type: 'String',
+              required: true,
+              desc: '密码',
+            },
+          },
+        });
+        const body = res.body;
+        body.should.have.deep.property('state', 0);
+      } catch (err) {
+        console.log(err);
+      }
+    });
   });
 
   describe('getUserList', () => {
@@ -116,6 +151,44 @@ describe('API-Type', () => {
       } catch (err) {
         console.log(err);
       }
+    });
+  });
+});
+
+describe('Method-User', () => {
+  describe('verifyToken', () => {
+    it('should return verify faile with 403', async () => {
+      const ctx = {
+        body: {},
+        headers: {},
+      };
+      const rst = await verifyToken(ctx);
+      ctx.should.have.deep.property('status', 403);
+      rst.should.to.be.false;
+    });
+    it('should return verify faile with 401', async () => {
+      const ctx = {
+        body: {},
+        headers: { authorization: 'test' },
+      };
+      const rst = await verifyToken(ctx);
+      ctx.should.have.deep.property('status', 500);
+      rst.should.to.be.false;
+    });
+    it('should return user info', async () => {
+      const token = createToken({
+        _id: 'testtesttesttest',
+        type: 10,
+        stuid: '000000',
+      });
+      const ctx = {
+        body: {},
+        headers: { authorization: `Bearer ${token}` },
+      };
+      const rst = await verifyToken(ctx);
+      rst.should.have.deep.property('_id', 'testtesttesttest');
+      rst.should.have.deep.property('type', 10);
+      rst.should.have.deep.property('stuid', '000000');
     });
   });
 });

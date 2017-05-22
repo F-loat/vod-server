@@ -1,4 +1,36 @@
 ## 用户相关API
+### 用户登录
+#### 接口：`POST` /request/user/login
+#### 参数
+
+
+
+参数名 | 类型 | 是否必填 | 说明
+--- | --- | --- | ---
+stuid | String | 是 | 学号
+pwd | String | 是 | 密码
+
+
+
+#### 使用示例
+
+请求参数：
+
+```json
+{
+  "stuid": "00000000",
+  "pwd": "test"
+}
+```
+
+返回结果：
+
+```json
+{
+  "state": 0,
+  "msg": "学号或密码错误"
+}
+```
 ### *获取用户列表*
 #### 接口：`GET` /request/user/list
 #### 参数
@@ -33,9 +65,9 @@ page | Number | 否 | 查询页数
   "content": {
     "users": [
       {
-        "_id": "5921b5cfe1279c04905ee74f",
-        "updatedAt": "2017-05-21T15:44:15.718Z",
-        "createdAt": "2017-05-21T15:44:15.718Z",
+        "_id": "59226658773c2a2d88c11040",
+        "updatedAt": "2017-05-22T04:17:28.649Z",
+        "createdAt": "2017-05-22T04:17:28.649Z",
         "stuid": "000000",
         "__v": 0,
         "deleted": false,
@@ -61,10 +93,10 @@ page | Number | 否 | 查询页数
   "state": 1,
   "content": {
     "user": {
-      "lastLoginAt": "2017-05-21T15:44:15.765Z",
-      "_id": "5921b5cfe1279c04905ee750",
-      "updatedAt": "2017-05-21T15:44:15.753Z",
-      "createdAt": "2017-05-21T15:44:15.753Z",
+      "lastLoginAt": "2017-05-22T04:17:28.682Z",
+      "_id": "59226658773c2a2d88c11041",
+      "updatedAt": "2017-05-22T04:17:28.668Z",
+      "createdAt": "2017-05-22T04:17:28.668Z",
       "stuid": "000000",
       "__v": 0,
       "deleted": false,
@@ -93,7 +125,7 @@ type | Number | 是 | 用户类型
 
 ```json
 {
-  "_id": "5921b5cfe1279c04905ee751",
+  "_id": "59226658773c2a2d88c11042",
   "type": 12
 }
 ```
@@ -104,9 +136,9 @@ type | Number | 是 | 用户类型
 {
   "state": 1,
   "content": {
-    "_id": "5921b5cfe1279c04905ee751",
-    "updatedAt": "2017-05-21T15:44:15.810Z",
-    "createdAt": "2017-05-21T15:44:15.789Z",
+    "_id": "59226658773c2a2d88c11042",
+    "updatedAt": "2017-05-22T04:17:28.702Z",
+    "createdAt": "2017-05-22T04:17:28.696Z",
     "stuid": "000000",
     "__v": 0,
     "deleted": false,

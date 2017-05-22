@@ -19,7 +19,7 @@ page | Number | 否 | 查询页数
 
 ```json
 {
-  "id": "5921b5cfe1279c04905ee73d",
+  "id": "59226658773c2a2d88c1102d",
   "limit": 10,
   "page": 1
 }
@@ -33,14 +33,14 @@ page | Number | 否 | 查询页数
   "content": {
     "topics": [
       {
-        "_id": "5921b5cfe1279c04905ee73d",
-        "updatedAt": "2017-05-21T15:44:15.374Z",
-        "createdAt": "2017-05-21T15:44:15.374Z",
+        "_id": "59226658773c2a2d88c1102d",
+        "updatedAt": "2017-05-22T04:17:28.372Z",
+        "createdAt": "2017-05-22T04:17:28.372Z",
         "title": "测试",
         "content": "测试测试测试",
-        "type": "5921b5cfe1279c04905ee73c",
+        "type": "59226658773c2a2d88c1102c",
         "author": {
-          "_id": "5921b5cfe1279c04905ee73b",
+          "_id": "59226658773c2a2d88c1102b",
           "stuid": "000000"
         },
         "__v": 0,
@@ -74,7 +74,7 @@ id | String | 是 | 帖子Id
 
 ```json
 {
-  "id": "5921b5cfe1279c04905ee740"
+  "id": "59226658773c2a2d88c11030"
 }
 ```
 
@@ -84,13 +84,13 @@ id | String | 是 | 帖子Id
 {
   "state": 1,
   "content": {
-    "_id": "5921b5cfe1279c04905ee740",
-    "updatedAt": "2017-05-21T15:44:15.433Z",
-    "createdAt": "2017-05-21T15:44:15.433Z",
+    "_id": "59226658773c2a2d88c11030",
+    "updatedAt": "2017-05-22T04:17:28.415Z",
+    "createdAt": "2017-05-22T04:17:28.415Z",
     "title": "测试",
     "content": "测试测试测试",
-    "type": "5921b5cfe1279c04905ee73f",
-    "author": "5921b5cfe1279c04905ee73e",
+    "type": "59226658773c2a2d88c1102f",
+    "author": "59226658773c2a2d88c1102e",
     "__v": 0,
     "sort": 0,
     "deleted": false,
@@ -123,7 +123,7 @@ type | String | 是 | 帖子类型
 {
   "title": "发布",
   "content": "发布发布发布",
-  "type": "5921b5cfe1279c04905ee742"
+  "type": "59226658773c2a2d88c11032"
 }
 ```
 
@@ -134,13 +134,13 @@ type | String | 是 | 帖子类型
   "state": 1,
   "content": {
     "__v": 0,
-    "updatedAt": "2017-05-21T15:44:15.506Z",
-    "createdAt": "2017-05-21T15:44:15.506Z",
+    "updatedAt": "2017-05-22T04:17:28.459Z",
+    "createdAt": "2017-05-22T04:17:28.459Z",
     "title": "发布",
     "content": "发布发布发布",
-    "type": "5921b5cfe1279c04905ee742",
-    "author": "5921b5cfe1279c04905ee741",
-    "_id": "5921b5cfe1279c04905ee744",
+    "type": "59226658773c2a2d88c11032",
+    "author": "59226658773c2a2d88c11031",
+    "_id": "59226658773c2a2d88c11034",
     "sort": 1,
     "deleted": false,
     "lock": false,

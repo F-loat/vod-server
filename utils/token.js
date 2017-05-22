@@ -4,11 +4,12 @@ const moment = require('moment');
 const redis = require('./redis');
 
 exports.create = (user) => {
+  const { _id, type, stuid } = user;
   const expires = moment().add(7, 'days').valueOf();
   return jwt.encode({
-    _id: user._id,
-    type: user.type,
-    stuid: user.stuid,
+    _id,
+    type,
+    stuid,
     exp: expires,
   }, 'youngon');
 };
