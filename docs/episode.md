@@ -1,5 +1,5 @@
 ## 剧集相关API
-### 获取视频列表
+### 获取剧集列表
 #### 接口：`GET` /request/episode/list
 #### 参数
 
@@ -18,7 +18,7 @@ state | String | 否 | 剧集状态
 
 ```json
 {
-  "videoId": "59226658773c2a2d88c11029",
+  "videoId": "592268fa5a02d9157c985f1d",
   "state": "[0]"
 }
 ```
@@ -30,14 +30,14 @@ state | String | 否 | 剧集状态
   "state": 1,
   "content": [
     {
-      "_id": "59226658773c2a2d88c1102a",
-      "updatedAt": "2017-05-22T04:17:28.309Z",
-      "createdAt": "2017-05-22T04:17:28.309Z",
+      "_id": "592268fa5a02d9157c985f1e",
+      "updatedAt": "2017-05-22T04:28:42.836Z",
+      "createdAt": "2017-05-22T04:28:42.836Z",
       "name": "测试",
       "filePath": "episode/2017/5/20/hahaha.mp4",
-      "video": "59226658773c2a2d88c11029",
+      "video": "592268fa5a02d9157c985f1d",
       "creater": {
-        "_id": "59226658773c2a2d88c11027",
+        "_id": "592268fa5a02d9157c985f1b",
         "stuid": "000000"
       },
       "__v": 0,

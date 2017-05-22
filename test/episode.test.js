@@ -38,7 +38,7 @@ describe('API-Episode', () => {
     });
     const lastEpisode = await Episode
       .findOne({ video: video._id }).sort({ sort: -1 });
-    const episode = Episode.create({
+    const episode = await Episode.create({
       name: '测试',
       filePath: 'episode/2017/5/20/hahaha.mp4',
       video: video._id,
@@ -63,9 +63,6 @@ describe('API-Episode', () => {
     this.video = null;
     this.episode = null;
   });
-  after(async () => {
-    if (process.env.GEN_DOC > 0) t2d.generate();
-  });
 
   describe('getEpisodeList', () => {
     it('should return video list', async () => {
@@ -74,7 +71,7 @@ describe('API-Episode', () => {
           agent: request,
           file: 'episode',
           group: '剧集相关API',
-          title: '获取视频列表',
+          title: '获取剧集列表',
           method: 'get',
           url: '/request/episode/list',
           headers: { Accept: 'application/json' },

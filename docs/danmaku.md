@@ -18,7 +18,7 @@ max | Number | 否 | 最大数量
 
 ```json
 {
-  "id": "59226658773c2a2d88c11020",
+  "id": "592268fa5a02d9157c985f14",
   "max": 1000
 }
 ```
@@ -30,9 +30,9 @@ max | Number | 否 | 最大数量
   "code": 1,
   "danmaku": [
     {
-      "_id": "59226658773c2a2d88c11021",
-      "author": "59226658773c2a2d88c1101e",
-      "time": 73,
+      "_id": "592268fa5a02d9157c985f15",
+      "author": "592268fa5a02d9157c985f12",
+      "time": 64,
       "text": "测试",
       "color": "#fff",
       "type": "right",
@@ -40,7 +40,7 @@ max | Number | 否 | 最大数量
       "referer": "localhost:test",
       "__v": 0,
       "player": [
-        "59226658773c2a2d88c11020"
+        "592268fa5a02d9157c985f14"
       ]
     }
   ]
@@ -70,7 +70,7 @@ type | String | 是 | 弹幕类型
 
 ```json
 {
-  "author": "59226658773c2a2d88c11022",
+  "author": "592268fa5a02d9157c985f16",
   "color": "#fff",
   "player": "590bf24bc099e009e78e591c",
   "text": "111",
@@ -87,13 +87,13 @@ type | String | 是 | 弹幕类型
   "code": 1,
   "data": {
     "__v": 0,
-    "author": "59226658773c2a2d88c11022",
+    "author": "592268fa5a02d9157c985f16",
     "time": 0,
     "text": "111",
     "color": "#fff",
     "type": "right",
     "ip": "::ffff:127.0.0.1",
-    "_id": "59226658773c2a2d88c11026",
+    "_id": "592268fa5a02d9157c985f1a",
     "player": [
       "590bf24bc099e009e78e591c"
     ]
