@@ -8,6 +8,7 @@ const Comment = require('../controllers/comment');
 const Topic = require('../controllers/topic');
 const Type = require('../controllers/type');
 const User = require('../controllers/user');
+const Log = require('../controllers/log');
 const upload = require('../utils/upload');
 
 const router = new Router({
@@ -33,7 +34,6 @@ router
   .get('/video/typed', Video.typed);
 
 router
-  .get('/episode', Episode.detail)
   .post('/episode', Filter.admin, upload.single('episode'), Episode.add);
 router
   .get('/episode/list', Episode.list);
@@ -42,13 +42,12 @@ router
 
 router
   .get('/danmaku', Danmaku.detail)
-  .post('/danmaku', Danmaku.add);
+  .post('/danmaku', Filter.login, Danmaku.add);
 router
   .get('/danmaku/list', Danmaku.list);
 
 router
-  .get('/banner', Banner.detail)
-  .post('/banner', Filter.admin, Banner.add)
+  .post('/banner', Filter.admin, upload.single('banner'), Banner.add)
   .put('/banner', Filter.admin, Banner.update)
   .delete('/banner', Filter.admin, Banner.delete);
 router
@@ -88,5 +87,8 @@ router
   .post('/user/login', User.login);
 router
   .get('/user/logout', Filter.login, User.logout);
+
+router
+  .get('/log/list', Filter.admin, Log.list);
 
 module.exports = router;

@@ -4,15 +4,12 @@ const log4js = require('log4js');
 /**
  * Configure logger.
  */
-
-try {
-  fs.mkdirSync('./logs');
-} catch (err) {
-  if (err.code !== 'EEXIST') {
-    console.error('Could not set up log directory, error was: ', err);
-    process.exit(1);
-  }
-}
+const basePath = './logs';
+const accessPath = './logs/access';
+const appPath = './logs/app';
+if (!fs.existsSync(basePath)) fs.mkdirSync(basePath);
+if (!fs.existsSync(accessPath)) fs.mkdirSync(accessPath);
+if (!fs.existsSync(appPath)) fs.mkdirSync(appPath);
 
 log4js.configure('./config/log4js.json');
 log4js.getLogger('Startup').info('Server start');

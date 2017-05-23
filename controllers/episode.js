@@ -32,9 +32,6 @@ exports.list = async (ctx) => {
   ctx.body = { state: 1, content: episodes };
 };
 
-exports.detail = async (ctx) => {
-};
-
 exports.transcode = async (ctx) => {
   const transcodingCount = await Episode.count({ state: 1 });
   if (transcodingCount > 2) {

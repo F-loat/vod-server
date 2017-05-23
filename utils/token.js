@@ -1,8 +1,12 @@
+const fs = require('fs');
 const jwt = require('jwt-simple');
+const config = require('config');
 const moment = require('moment');
 // const logger = require('log4js').getLogger('Token');
 const redis = require('./redis');
 
+const publicKey = fs.readFileSync(config.get('secret.public'));
+const privateKey  = fs.readFileSync(config.get('secret.private'));
 exports.create = (user) => {
   const { _id, type, stuid } = user;
   const expires = moment().add(7, 'days').valueOf();
@@ -11,7 +15,7 @@ exports.create = (user) => {
     type,
     stuid,
     exp: expires,
-  }, 'youngon');
+  }, privateKey);
 };
 
 exports.verify = async (ctx) => {
@@ -22,7 +26,7 @@ exports.verify = async (ctx) => {
       ctx.body = { state: 0, msg: '访问受限' };
       return false;
     }
-    const user = jwt.decode(token.substring(7), 'youngon');
+    const user = jwt.decode(token.substring(7), publicKey, 'RS256');
     if (!user._id) {
       ctx.status = 401;
       ctx.body = { state: 0, msg: '令牌无效' };

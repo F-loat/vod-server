@@ -3,6 +3,7 @@ node_modules/
 logs/
 public/
 config/production.json
+config/production-key/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

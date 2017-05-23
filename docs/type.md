@@ -28,13 +28,13 @@ type | String | 否 | 分类类型
   "state": 1,
   "content": [
     {
-      "_id": "592268fa5a02d9157c985f2a",
-      "updatedAt": "2017-05-22T04:28:42.996Z",
-      "createdAt": "2017-05-22T04:28:42.996Z",
+      "_id": "5923f3deb74d6d08f4ae8aea",
+      "updatedAt": "2017-05-23T08:33:34.380Z",
+      "createdAt": "2017-05-23T08:33:34.380Z",
       "name": "电影",
       "type": "video",
       "creater": {
-        "_id": "592268fa5a02d9157c985f29",
+        "_id": "5923f3deb74d6d08f4ae8ae9",
         "stuid": "000000"
       },
       "__v": 0,
@@ -77,12 +77,12 @@ sort | Number | 否 | 排序值
   "state": 1,
   "content": {
     "__v": 0,
-    "updatedAt": "2017-05-22T04:28:43.034Z",
-    "createdAt": "2017-05-22T04:28:43.034Z",
+    "updatedAt": "2017-05-23T08:33:34.464Z",
+    "createdAt": "2017-05-23T08:33:34.464Z",
     "name": "电视剧",
     "type": "video",
-    "creater": "592268fb5a02d9157c985f2b",
-    "_id": "592268fb5a02d9157c985f2d",
+    "creater": "5923f3deb74d6d08f4ae8aeb",
+    "_id": "5923f3deb74d6d08f4ae8aed",
     "sort": 6,
     "deleted": false
   }
@@ -108,7 +108,7 @@ sort | Number | 否 | 排序值
 
 ```json
 {
-  "_id": "592268fb5a02d9157c985f2f",
+  "_id": "5923f3deb74d6d08f4ae8aef",
   "name": "综艺",
   "sort": 12
 }
@@ -121,11 +121,11 @@ sort | Number | 否 | 排序值
   "state": 1,
   "content": {
     "__v": 0,
-    "updatedAt": "2017-05-22T04:28:43.063Z",
-    "createdAt": "2017-05-22T04:28:43.063Z",
+    "updatedAt": "2017-05-23T08:33:34.498Z",
+    "createdAt": "2017-05-23T08:33:34.498Z",
     "name": "综艺",
-    "creater": "592268fb5a02d9157c985f2e",
-    "_id": "592268fb5a02d9157c985f30",
+    "creater": "5923f3deb74d6d08f4ae8aee",
+    "_id": "5923f3deb74d6d08f4ae8af0",
     "sort": 12,
     "deleted": false
   }
@@ -149,7 +149,7 @@ _id | String | 是 | 分类Id
 
 ```json
 {
-  "_id": "592268fb5a02d9157c985f32"
+  "_id": "5923f3deb74d6d08f4ae8af2"
 }
 ```
 

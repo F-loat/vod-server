@@ -17,7 +17,7 @@ id | String | 是 | 帖子Id
 
 ```json
 {
-  "id": "592268fa5a02d9157c985f0b"
+  "id": "5923f3ddb74d6d08f4ae8acb"
 }
 ```
 
@@ -28,13 +28,13 @@ id | String | 是 | 帖子Id
   "state": 1,
   "content": [
     {
-      "_id": "592268fa5a02d9157c985f0c",
-      "updatedAt": "2017-05-22T04:28:42.549Z",
-      "createdAt": "2017-05-22T04:28:42.549Z",
-      "subject": "592268fa5a02d9157c985f0b",
+      "_id": "5923f3ddb74d6d08f4ae8acc",
+      "updatedAt": "2017-05-23T08:33:33.711Z",
+      "createdAt": "2017-05-23T08:33:33.711Z",
+      "subject": "5923f3ddb74d6d08f4ae8acb",
       "content": "评论评论评论",
       "commenter": {
-        "_id": "592268fa5a02d9157c985f09",
+        "_id": "5923f3ddb74d6d08f4ae8ac9",
         "stuid": "000000"
       },
       "__v": 0,
@@ -63,7 +63,7 @@ reply | String | 否 | 回复目标
 
 ```json
 {
-  "id": "592268fa5a02d9157c985f0f",
+  "id": "5923f3ddb74d6d08f4ae8acf",
   "content": "发布评论lalala",
   "reply": null
 }
@@ -76,13 +76,13 @@ reply | String | 否 | 回复目标
   "state": 1,
   "content": {
     "__v": 0,
-    "updatedAt": "2017-05-22T04:28:42.670Z",
-    "createdAt": "2017-05-22T04:28:42.670Z",
-    "subject": "592268fa5a02d9157c985f0f",
+    "updatedAt": "2017-05-23T08:33:33.885Z",
+    "createdAt": "2017-05-23T08:33:33.885Z",
+    "subject": "5923f3ddb74d6d08f4ae8acf",
     "content": "发布评论lalala",
-    "commenter": "592268fa5a02d9157c985f0d",
+    "commenter": "5923f3ddb74d6d08f4ae8acd",
     "reply": null,
-    "_id": "592268fa5a02d9157c985f11",
+    "_id": "5923f3ddb74d6d08f4ae8ad1",
     "deleted": false
   }
 }

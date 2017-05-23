@@ -7,9 +7,6 @@ exports.add = async (ctx) => {
 exports.list = async (ctx) => {
 };
 
-exports.detail = async (ctx) => {
-};
-
 exports.update = async (ctx) => {
 };
 

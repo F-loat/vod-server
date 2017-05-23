@@ -2,8 +2,8 @@
   "mongodb": "mongodb://localhost/vod",
   "redis": "redis://localhost:6379/0",
   "secret": {
-    "public": "youngon",
-    "private": "youngon"
+    "public": "./config/default-key/pub.pem",
+    "private": "./config/default-key/pri.pem"
   },
   "uploadPath": "../uploads"
 }

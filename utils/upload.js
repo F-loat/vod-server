@@ -6,9 +6,11 @@ const multer = require('koa-multer');
 const uploadPath = config.get('uploadPath');
 const episodePath = path.join(uploadPath, 'episode');
 const posterPath = path.join(uploadPath, 'poster');
+const bannerPath = path.join(uploadPath, 'banner');
 if (!fs.existsSync(uploadPath)) fs.mkdirSync(uploadPath);
 if (!fs.existsSync(episodePath)) fs.mkdirSync(episodePath);
 if (!fs.existsSync(posterPath)) fs.mkdirSync(posterPath);
+if (!fs.existsSync(bannerPath)) fs.mkdirSync(bannerPath);
 
 const storage = multer.diskStorage({
   destination(req, file, cb) {
