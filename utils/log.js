@@ -12,7 +12,6 @@ if (!fs.existsSync(accessPath)) fs.mkdirSync(accessPath);
 if (!fs.existsSync(appPath)) fs.mkdirSync(appPath);
 
 log4js.configure('./config/log4js.json');
-log4js.getLogger('Startup').info('Server start');
 
 // 格式化请求日志
 const formatReq = (req, resTime) => {
@@ -94,7 +93,11 @@ const logError = (ctx, err, resTime) => {
   }
 };
 
+// 封装服务日志
+const logServer = (info) => log4js.getLogger('Server').info(info);
+
 module.exports = {
   logResponse,
   logError,
+  logServer,
 };

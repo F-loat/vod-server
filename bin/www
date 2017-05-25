@@ -73,6 +73,8 @@ const server = http.createServer(app.callback());
  */
 
 server.listen(port);
+log.logServer('start listening');
 server.on('error', onError);
+server.on('close', () => log.logServer('stop listening'));
 
 module.exports = server;
