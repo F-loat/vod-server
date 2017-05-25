@@ -1,4 +1,5 @@
 const request = require('superagent');
+const cheerio = require('cheerio');
 const User = require('../models/user');
 const createToken = require('../utils/token').create;
 const expireToken = require('../utils/token').expire;
@@ -6,33 +7,44 @@ const logger = require('log4js').getLogger('User');
 
 exports.login = async (ctx) => {
   const { stuid, pwd } = ctx.request.body;
-  const url = 'http://ids1.tjcu.edu.cn/amserver/UI/Login';
-  const status = await request.post(url)
-    .type('form')
-    .send({
-      IDToken1: stuid,
-      IDToken2: pwd,
-      IDButton: 'Submit',
-      encoded: false,
-      gx_charset: 'UTF-8',
-    })
-    .redirects(0)
-    .then(response => response.status)
-    .catch(err => err.status || err.code);
-  if (status === 200) {
-    ctx.body = { state: 0, msg: '学号或密码错误' };
-    return;
+  const url = 'http://authserver.tjcu.edu.cn/authserver/login';
+
+  const loginPage = await request.get(url);
+  const $ = cheerio.load(loginPage.text);
+  const lt = $('[name=lt]').val();
+  const dllt = $('[name=dllt]').val();
+  const execution = $('[name=execution]').val();
+  const _eventId = $('[name=_eventId]').val();
+  const rmShown = $('[name=rmShown]').val();
+  try {
+    const rst = await request.post(url)
+      .type('form')
+      .set('Cookie', loginPage.header['set-cookie'])
+      .send({
+        username: stuid,
+        password: pwd,
+        captchaRespon: '1',
+        lt,
+        dllt,
+        execution,
+        _eventId,
+        rmShown,
+      })
+      .redirects(0);
+    const msg = cheerio.load(rst.text)('#msg').text();
+    ctx.body = { state: 0, msg };
+  } catch (err) {
+    if (err.status !== 302) {
+      ctx.body = { state: 0, msg: `网络错误 ${status}` };
+      return;
+    }
+    let user = await User.findOne({ stuid });
+    if (!user) user = await User.create({ stuid });
+    const token = createToken(user);
+    user.lastLoginAt = Date.now();
+    user.save();
+    ctx.body = { state: 1, content: { user, token } };
   }
-  if (status !== 302) {
-    ctx.body = { state: 0, msg: `网络错误 ${status}` };
-    return;
-  }
-  let user = await User.findOne({ stuid });
-  if (!user) user = await User.create({ stuid });
-  const token = createToken(user);
-  user.lastLoginAt = Date.now();
-  user.save();
-  ctx.body = { state: 1, content: { user, token } };
 };
 
 exports.logout = (ctx) => {
