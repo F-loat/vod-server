@@ -5,5 +5,9 @@
     "public": "./config/default-key/pub.pem",
     "private": "./config/default-key/pri.pem"
   },
+  "wx": {
+    "appid": "wxcc4c9270ba9de54b",
+    "appsecret": "802e1a380664a4bee3eddae7e7793021"
+  },
   "uploadPath": "../uploads"
 }
