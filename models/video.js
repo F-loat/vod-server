@@ -22,6 +22,7 @@ const ObjectId = Schema.Types.ObjectId;
  * @param createdAt        {Date}      创建时间
  * @param updatedAt        {Date}      更新时间
  * @param sort             {Number}    排序值
+ * @param random           {Number}    随机值
  */
 
 const videoSchema = new Schema({
@@ -40,6 +41,7 @@ const videoSchema = new Schema({
   deleted: { type: Boolean, default: false },
   creater: { type: ObjectId, ref: 'User' },
   sort: { type: Number, default: 0, index: true },
+  random: { type: Number, default: Math.random, index: true },
 }, {
   timestamps: true,
 });

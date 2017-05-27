@@ -16,13 +16,13 @@ exports.add = async (ctx) => {
 
 exports.list = async (ctx) => {
   const query = { deleted: false };
-  const { type, limit = 0, page } = ctx.query;
+  const { type, limit = 10, page = 1 } = ctx.query;
   if (type) query.type = type;
 
   const result = await Promise.all([
     Topic
       .find(query)
-      .populate('author', 'nickname stuid')
+      .populate('author', 'nickname stuid avatar')
       .sort({ sort: -1 })
       .skip(page > 0 ? (page - 1) * limit : 0)
       .limit(Number(limit)),
@@ -47,7 +47,7 @@ exports.detail = async (ctx) => {
     ctx.body = { state: 1, content: topic };
   } catch (err) {
     logger.error(err);
-    ctx.body = { state: 0, msg: err };
+    ctx.body = { state: 0, msg: err.message };
   }
 };
 

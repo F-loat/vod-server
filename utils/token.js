@@ -8,12 +8,13 @@ const redis = require('./redis');
 const publicKey = fs.readFileSync(config.get('secret.public'));
 const privateKey  = fs.readFileSync(config.get('secret.private'));
 exports.create = (user) => {
-  const { _id, type, stuid } = user;
+  const { _id, type, stuid, openid } = user;
   const expires = moment().add(7, 'days').valueOf();
   return jwt.encode({
     _id,
     type,
     stuid,
+    openid,
     exp: expires,
   }, privateKey);
 };

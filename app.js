@@ -25,6 +25,7 @@ app.use(async (ctx, next) => {
   } catch (err) {
     ms = new Date() - start;
     logger.logError(ctx, err, ms);
+    ctx.body = { state: 0, msg: err.message };
   }
 });
 app.use(router.routes());

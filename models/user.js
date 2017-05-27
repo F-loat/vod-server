@@ -42,6 +42,12 @@ const userSchema = new Schema({
   timestamps: true,
 });
 
+userSchema.pre('save', function replace(next) {
+  const avatar = this.avatar;
+  this.avatar = avatar && avatar.replace(/\\/g, '/');
+  next();
+});
+
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;

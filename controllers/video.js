@@ -123,15 +123,10 @@ exports.list = async (ctx) => {
 };
 
 exports.detail = async (ctx) => {
-  try {
-    const video = await Video.findById(ctx.query._id);
-    if (!video) throw new Error('not exist');
-    if (video.deleted === true) throw new Error('deleted');
-    ctx.body = { state: 1, content: video };
-  } catch (err) {
-    logger.error(err);
-    ctx.body = { state: 0, msg: err.message };
-  }
+  const video = await Video.findById(ctx.query._id);
+  if (!video) throw new Error('not exist');
+  if (video.deleted === true) throw new Error('deleted');
+  ctx.body = { state: 1, content: video };
 };
 
 exports.update = async (ctx) => {
@@ -171,12 +166,7 @@ exports.update = async (ctx) => {
 
 exports.delete = async (ctx) => {
   const _id = ctx.query._id;
-  try {
-    await Video.update({ _id }, { $set: { deleted: true } });
-    ctx.body = { state: 1, content: true };
-    logger.info(`视频${_id}被管理员${ctx.user._id}删除`);
-  } catch (err) {
-    ctx.body = { state: 0, msg: err };
-    logger.error(err);
-  }
+  await Video.update({ _id }, { $set: { deleted: true } });
+  ctx.body = { state: 1, content: true };
+  logger.info(`视频${_id}被管理员${ctx.user._id}删除`);
 };

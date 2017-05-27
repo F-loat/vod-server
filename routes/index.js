@@ -9,7 +9,7 @@ const Topic = require('../controllers/topic');
 const Type = require('../controllers/type');
 const User = require('../controllers/user');
 const Log = require('../controllers/log');
-const upload = require('../utils/upload');
+const { upload } = require('../utils/upload');
 
 const router = new Router({
   prefix: '/request',
@@ -86,9 +86,18 @@ router
 router
   .post('/user/login', User.login);
 router
+  .post('/user/wxoauth', User.wxoauth);
+router
+  .get('/user/wxoauth/url', User.wxoauthurl);
+router
   .get('/user/logout', Filter.login, User.logout);
 
 router
   .get('/log/list', Filter.admin, Log.list);
+
+router
+  .get('/wx_test_token', (ctx) => {
+    ctx.body = ctx.query.echostr;
+  });
 
 module.exports = router;

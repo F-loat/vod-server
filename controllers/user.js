@@ -1,8 +1,13 @@
 const request = require('superagent');
 const cheerio = require('cheerio');
+const fs = require('fs');
+const path = require('path');
+const config = require('config');
 const User = require('../models/user');
+const wx = require('../utils/wx');
 const createToken = require('../utils/token').create;
 const expireToken = require('../utils/token').expire;
+const { getDatePath } = require('../utils/upload');
 const logger = require('log4js').getLogger('User');
 
 exports.login = async (ctx) => {
@@ -39,7 +44,7 @@ exports.login = async (ctx) => {
       return;
     }
     let user = await User.findOne({ stuid });
-    if (!user) user = await User.create({ stuid });
+    if (!user) user = await User.create({ stuid, type: 2 });
     const token = createToken(user);
     user.lastLoginAt = Date.now();
     user.save();
@@ -47,8 +52,44 @@ exports.login = async (ctx) => {
   }
 };
 
+exports.wxoauth = async (ctx) => {
+  const code = ctx.request.body.code;
+  const wxtoken = await wx.oauth.getAccessToken(code);
+  const openid = wxtoken.data.openid;
+  let user = await User.findOne({ openid });
+  if (!user) {
+    const wxinfo = await wx.api.getUser({
+      openid,
+      lang: 'zh_CN',
+    });
+    const uploadPath = config.get('uploadPath');
+    const headimgPath = path.join(getDatePath('headimg'), String(Date.now()));
+    const res = await request.get(wxinfo.headimgurl);
+    fs.writeFileSync(headimgPath, res.body);
+    user = await User.create({
+      openid,
+      nickname: wxinfo.nickname,
+      sex: wxinfo.sex,
+      city: wxinfo.city,
+      province: wxinfo.province,
+      avatar: path.relative(uploadPath, headimgPath),
+      remark: wxinfo.remark,
+      type: 2,
+    });
+  }
+  const token = createToken(user);
+  ctx.body = { state: 1, content: { user, token } };
+};
+
+exports.wxoauthurl = async (ctx) => {
+  const baseurl = ctx.headers.referer;
+  const authurl = wx.oauth.getAuthorizeURL(baseurl, 'wxoauth', 'snsapi_base');
+  ctx.body = { state: 1, content: { authurl } };
+};
+
 exports.logout = (ctx) => {
   expireToken(ctx.user);
+  ctx.body = { state: 1, content: true };
 };
 
 exports.detail = async (ctx) => {
@@ -94,25 +135,15 @@ exports.list = async (ctx) => {
 
 exports.update = async (ctx) => {
   const { _id, type } = ctx.request.body;
-  try {
-    const user = await User.findByIdAndUpdate(
-      _id, { $set: { type } }, { new: true }
-    );
-    ctx.body = { state: 1, content: user };
-  } catch (err) {
-    logger.error(err);
-    ctx.body = { state: 0, msg: err };
-  }
+  const user = await User.findByIdAndUpdate(
+    _id, { $set: { type } }, { new: true }
+  );
+  ctx.body = { state: 1, content: user };
 };
 
 exports.delete = async (ctx) => {
   const _id = ctx.query._id;
-  try {
-    await User.update({ _id }, { $set: { deleted: true } });
-    logger.error(`用户${_id}被管理员${ctx.user.stuid}禁用`);
-    ctx.body = { state: 1, content: true };
-  } catch (err) {
-    logger.error(err);
-    ctx.body = { state: 0, msg: err };
-  }
+  await User.update({ _id }, { $set: { deleted: true } });
+  logger.info(`用户${_id}被管理员${ctx.user.stuid}禁用`);
+  ctx.body = { state: 1, content: true };
 };
