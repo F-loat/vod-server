@@ -13,7 +13,7 @@ exports.login = async (ctx) => {
   const { stuid, pwd } = ctx.request.body;
   const url = 'http://authserver.tjcu.edu.cn/authserver/login';
 
-  const loginPage = await request.get(url);
+  const loginPage = await request.get(url).timeout({ response: 6000 });
   const $ = cheerio.load(loginPage.text);
   const lt = $('[name=lt]').val();
   const dllt = $('[name=dllt]').val();
