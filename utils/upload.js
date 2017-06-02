@@ -27,12 +27,12 @@ const getDatePath = (type) => {
   if (!fs.existsSync(monthPath)) fs.mkdirSync(monthPath);
   if (!fs.existsSync(dayPath)) fs.mkdirSync(dayPath);
   return dayPath;
-}
+};
 
 const storage = multer.diskStorage({
   destination(req, file, cb) {
-    const path = getDatePath(file.fieldname);
-    cb(null, path);
+    const filePath = getDatePath(file.fieldname);
+    cb(null, filePath);
   },
   filename(req, file, cb) {
     if (file.fieldname === 'episode') {

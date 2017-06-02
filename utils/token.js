@@ -2,11 +2,10 @@ const fs = require('fs');
 const jwt = require('jwt-simple');
 const config = require('config');
 const moment = require('moment');
-// const logger = require('log4js').getLogger('Token');
 const redis = require('./redis');
 
 const publicKey = fs.readFileSync(config.get('secret.public'));
-const privateKey  = fs.readFileSync(config.get('secret.private'));
+const privateKey = fs.readFileSync(config.get('secret.private'));
 exports.create = (user) => {
   const { _id, type, stuid, openid } = user;
   const expires = moment().add(7, 'days').valueOf();

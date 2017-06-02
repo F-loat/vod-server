@@ -8,7 +8,6 @@ const wx = require('../utils/wx');
 const createToken = require('../utils/token').create;
 const expireToken = require('../utils/token').expire;
 const { getDatePath } = require('../utils/upload');
-const logger = require('log4js').getLogger('User');
 
 exports.login = async (ctx) => {
   const { stuid, pwd } = ctx.request.body;
@@ -40,7 +39,7 @@ exports.login = async (ctx) => {
     ctx.body = { state: 0, msg };
   } catch (err) {
     if (err.status !== 302) {
-      ctx.body = { state: 0, msg: `网络错误 ${status}` };
+      ctx.body = { state: 0, msg: `网络错误 ${err.status}` };
       return;
     }
     let user = await User.findOne({ stuid });
@@ -130,20 +129,18 @@ exports.list = async (ctx) => {
       totalCount,
     },
   };
-  logger.info(`管理员${ctx.user.stuid}获取了用户列表`);
+  console.info(`管理员${ctx.user.stuid}获取了用户列表`);
 };
 
 exports.update = async (ctx) => {
   const { _id, type } = ctx.request.body;
-  const user = await User.findByIdAndUpdate(
-    _id, { $set: { type } }, { new: true }
-  );
+  const user = await User.findByIdAndUpdate(_id, { $set: { type } }, { new: true });
   ctx.body = { state: 1, content: user };
 };
 
 exports.delete = async (ctx) => {
   const _id = ctx.query._id;
   await User.update({ _id }, { $set: { deleted: true } });
-  logger.info(`用户${_id}被管理员${ctx.user.stuid}禁用`);
+  console.info(`用户${_id}被管理员${ctx.user.stuid}禁用`);
   ctx.body = { state: 1, content: true };
 };

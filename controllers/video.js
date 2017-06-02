@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 const config = require('config');
-const logger = require('log4js').getLogger('Video');
 const Video = require('../models/video');
 const Episode = require('../models/episode');
 const Type = require('../models/type');
@@ -82,7 +81,7 @@ exports.typed = async (ctx) => {
   } catch (err) {
     ctx.status = 500;
     ctx.body = { state: 0, msg: '服务端错误' };
-    logger.error(err);
+    console.error(err);
   }
 };
 
@@ -168,5 +167,5 @@ exports.delete = async (ctx) => {
   const _id = ctx.query._id;
   await Video.update({ _id }, { $set: { deleted: true } });
   ctx.body = { state: 1, content: true };
-  logger.info(`视频${_id}被管理员${ctx.user._id}删除`);
+  console.info(`视频${_id}被管理员${ctx.user._id}删除`);
 };

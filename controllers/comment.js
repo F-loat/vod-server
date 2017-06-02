@@ -1,5 +1,4 @@
 const Comment = require('../models/comment');
-const logger = require('log4js').getLogger('Comment');
 
 exports.add = async (ctx) => {
   const { id, content, reply } = ctx.request.body;

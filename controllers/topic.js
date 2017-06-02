@@ -1,5 +1,4 @@
 const Topic = require('../models/topic');
-const logger = require('log4js').getLogger('Topic');
 
 exports.add = async (ctx) => {
   const { title, content, type } = ctx.request.body;
@@ -46,7 +45,7 @@ exports.detail = async (ctx) => {
     if (topic.deleted === true) throw new Error('deleted');
     ctx.body = { state: 1, content: topic };
   } catch (err) {
-    logger.error(err);
+    console.error(err);
     ctx.body = { state: 0, msg: err.message };
   }
 };

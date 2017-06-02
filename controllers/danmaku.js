@@ -1,13 +1,12 @@
 const fs = require('fs');
 const redis = require('../utils/redis');
-const logger = require('log4js').getLogger('DPlayer');
 const Danmaku = require('../models/danmaku');
 
 exports.list = (ctx) => {
   ctx.body = {};
   Danmaku.distinct('player', (err, data) => {
     if (err) {
-      logger.log(err);
+      console.error(err);
     }
 
     let json = '';
@@ -27,10 +26,10 @@ exports.detail = async (ctx) => {
 
   const reply = await redis.get(`dplayer${id}`);
   if (reply) {
-    logger.info(`DPlayer id ${id} form redis, IP: ${ip}`);
+    console.info(`DPlayer id ${id} form redis, IP: ${ip}`);
     ctx.body = reply;
   } else {
-    logger.info(`DPlayer id ${id} form mongodb, IP: ${ip}`);
+    console.info(`DPlayer id ${id} form mongodb, IP: ${ip}`);
     try {
       const data = await Danmaku.find({ player: id });
       const dan = {
@@ -44,7 +43,7 @@ exports.detail = async (ctx) => {
       redis.set(`dplayer${id}`, sendDan);
       redis.expire(`dplayer${id}`, 86400);
     } catch (err) {
-      logger.error(err);
+      console.error(err);
     }
   }
 };
@@ -71,14 +70,14 @@ exports.add = async (ctx) => {
   // check black ip
   const blanklist = fs.readFileSync('blacklist').toString().split('\n');
   if (blanklist.indexOf(ip.split(',')[0]) !== -1) {
-    logger.info(`Reject POST form ${ip} for black ip.`);
+    console.info(`Reject POST form ${ip} for black ip.`);
     ctx.body = '{"code": -1, "msg": "Rejected for black ip."}';
     return;
   }
 
   // frequency limitation
   if (postIP.indexOf(ip) !== -1) {
-    logger.info(`Reject POST form ${ip} for frequent operation.`);
+    console.info(`Reject POST form ${ip} for frequent operation.`);
     ctx.body = '{"code": -2, "msg": "Rejected for frequent operation."}';
     return;
   }
@@ -99,19 +98,19 @@ exports.add = async (ctx) => {
     || jsonStr.color === undefined
     || jsonStr.type === undefined
     || jsonStr.text.length >= 30) {
-    logger.info(`Reject POST form ${ip} for illegal data: ${JSON.stringify(jsonStr)}`);
+    console.info(`Reject POST form ${ip} for illegal data: ${JSON.stringify(jsonStr)}`);
     ctx.body = '{"code": -3, "msg": "Rejected for illegal data"}';
     return;
   }
 
   // check black username
   if (blanklist.indexOf(jsonStr.author) !== -1) {
-    logger.info(`Reject POST form ${jsonStr.author} for black user.`);
+    console.info(`Reject POST form ${jsonStr.author} for black user.`);
     ctx.body = '{"code": -5, "msg": "Rejected for black user."}';
     return;
   }
 
-  logger.info(`POST form ${ip}, data: ${JSON.stringify(jsonStr)}`);
+  console.info(`POST form ${ip}, data: ${JSON.stringify(jsonStr)}`);
 
   try {
     const dan = await Danmaku.create({
@@ -127,7 +126,7 @@ exports.add = async (ctx) => {
     ctx.body = `{"code": 1, "data": ${JSON.stringify(dan)}}`;
     redis.del(`dplayer${htmlEncode(jsonStr.player)}`);
   } catch (err) {
-    logger.error(err);
+    console.error(err);
     ctx.body = '{"code": 0, "msg": "Error happens, please contact system administrator."}';
   }
 };

@@ -1,9 +1,7 @@
 const fs = require('fs');
-const moment = require('moment');
 
 exports.list = async (ctx) => {
-  const today = moment().format('YYYY-MM-DD');
-  const log = fs.readFileSync(`./logs/app/log.${today}`, {
+  const log = fs.readFileSync('./logs/pm2-out-0.log', {
     encoding: 'utf8',
   });
   ctx.body = { state: 1, content: log };

@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 const config = require('config');
-const logger = require('log4js').getLogger('Episode');
 const Episode = require('../models/episode');
 const transcode = require('../utils/transcode');
 
@@ -58,7 +57,7 @@ exports.transcode = async (ctx) => {
   } catch (err) {
     episode.state = -1;
     episode.save();
-    logger.error(err);
+    console.error(err);
   }
 };
 

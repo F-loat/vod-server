@@ -6,7 +6,6 @@
 
 const app = require('../app');
 const http = require('http');
-const log = require('../utils/log');
 
 /**
  * Normalize a port into a number, string, or false.
@@ -73,8 +72,8 @@ const server = http.createServer(app.callback());
  */
 
 server.listen(port);
-log.logServer('start listening');
+console.log('start listening');
 server.on('error', onError);
-server.on('close', () => log.logServer('stop listening'));
+server.on('close', () => console.log('stop listening'));
 
 module.exports = server;
