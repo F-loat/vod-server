@@ -1,4 +1,4 @@
-const Type = require('../models/type');
+const { Type } = require('../models');
 
 exports.add = async (ctx) => {
   const { name, type, sort } = ctx.request.body;

@@ -1,6 +1,6 @@
 const fs = require('fs');
-const redis = require('../utils/redis');
-const Danmaku = require('../models/danmaku');
+const { redis } = require('../utils');
+const { Danmaku } = require('../models');
 
 exports.list = (ctx) => {
   ctx.body = {};

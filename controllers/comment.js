@@ -1,4 +1,4 @@
-const Comment = require('../models/comment');
+const { Comment } = require('../models');
 
 exports.add = async (ctx) => {
   const { id, content, reply } = ctx.request.body;

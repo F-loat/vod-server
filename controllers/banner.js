@@ -1,4 +1,4 @@
-const Banner = require('../models/banner');
+const { Banner } = require('../models');
 
 exports.add = async (ctx) => {
 };

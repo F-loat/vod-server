@@ -1,10 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const config = require('config');
-const Video = require('../models/video');
-const Episode = require('../models/episode');
-const Type = require('../models/type');
-const redis = require('../utils/redis');
+const { Video, Episode, Type } = require('../models');
+const { redis } = require('../utils');
 
 const uploadPath = config.get('uploadPath');
 

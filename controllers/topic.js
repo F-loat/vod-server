@@ -1,4 +1,4 @@
-const Topic = require('../models/topic');
+const { Topic } = require('../models');
 
 exports.add = async (ctx) => {
   const { title, content, type } = ctx.request.body;

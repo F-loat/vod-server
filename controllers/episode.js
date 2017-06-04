@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const config = require('config');
-const Episode = require('../models/episode');
-const transcode = require('../utils/transcode');
+const { Episode } = require('../models');
+const { transcode } = require('../utils');
 
 const uploadPath = config.get('uploadPath');
 

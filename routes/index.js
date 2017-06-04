@@ -1,15 +1,8 @@
 const Router = require('koa-router');
-const Filter = require('../controllers/filter');
-const Video = require('../controllers/video');
-const Episode = require('../controllers/episode');
-const Danmaku = require('../controllers/danmaku');
-const Banner = require('../controllers/banner');
-const Comment = require('../controllers/comment');
-const Topic = require('../controllers/topic');
-const Type = require('../controllers/type');
-const User = require('../controllers/user');
-const Log = require('../controllers/log');
+const controllers = require('../controllers');
 const { upload } = require('../utils/upload');
+
+const { Banner, Comment, Danmaku, Episode, Filter, Log, Topic, Type, User, Video } = controllers;
 
 const router = new Router({
   prefix: '/request',

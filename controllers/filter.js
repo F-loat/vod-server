@@ -1,4 +1,4 @@
-const token = require('../utils/token');
+const { token } = require('../utils');
 
 exports.login = async (ctx, next) => {
   const user = await token.verify(ctx);
