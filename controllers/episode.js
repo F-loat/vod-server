@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const config = require('config');
+const ffmpeg = require('fluent-ffmpeg');
 const { Episode } = require('../models');
 const { transcode } = require('../utils');
 
@@ -46,19 +47,28 @@ exports.transcode = async (ctx) => {
   episode.save();
   ctx.body = { state: 1, content: true };
   if (!fs.existsSync(transPath)) fs.mkdirSync(transPath);
-  try {
-    await transcode(videoPath, outputPath);
-    fs.unlinkSync(videoPath);
-    episode.state = 2;
-    episode.filePath = path.relative(uploadPath, outputPath);
-    episode.save();
-    const nextEpisode = await Episode.findOne({ state: 0 });
-    if (nextEpisode) transcode(nextEpisode);
-  } catch (err) {
-    episode.state = -1;
-    episode.save();
-    console.error(err);
-  }
+  ffmpeg(videoPath)
+    .output(outputPath)
+    .audioCodec('aac')
+    .videoCodec('libx264')
+    .addOption('-hls_time', 15)
+    .addOption('-hls_list_size', 0)
+    .addOption('-threads', 2)
+    .on('end', async () => {
+      fs.unlinkSync(videoPath);
+      episode.state = 2;
+      episode.filePath = path.relative(uploadPath, outputPath);
+      episode.save();
+      const nextEpisode = await Episode.findOne({ state: 0 });
+      if (nextEpisode) transcode(nextEpisode);
+    })
+    .on('error', (err) => {
+      ctx.body = { state: 0, msg: err.message };
+      episode.state = -1;
+      episode.save();
+      console.error(err);
+    })
+    .run();
 };
 
 exports.update = async (ctx) => {
