@@ -79,9 +79,11 @@ router
 router
   .post('/user/login', User.login);
 router
+  .get('/user/wxoauth/url', User.wxoauthurl);
+router
   .post('/user/wxoauth', User.wxoauth);
 router
-  .get('/user/wxoauth/url', User.wxoauthurl);
+  .post('/user/wxbind', User.wxbind);
 router
   .get('/user/logout', Filter.login, User.logout);
 

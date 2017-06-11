@@ -9,11 +9,11 @@ const createToken = require('../utils/token').create;
 const expireToken = require('../utils/token').expire;
 const { getDatePath } = require('../utils/upload');
 
-exports.login = async (ctx) => {
-  const { stuid, pwd } = ctx.request.body;
+const authServer = (stuid, pwd) => new Promise(async (resolve, reject) => {
   const url = 'http://authserver.tjcu.edu.cn/authserver/login';
-
-  const loginPage = await request.get(url).timeout({ response: 6000 });
+  const loginPage = await request.get(url).timeout({
+    response: 6000,
+  });
   const $ = cheerio.load(loginPage.text);
   const lt = $('[name=lt]').val();
   const dllt = $('[name=dllt]').val();
@@ -36,47 +36,21 @@ exports.login = async (ctx) => {
       })
       .redirects(0);
     const msg = cheerio.load(rst.text)('#msg').text();
-    ctx.body = { state: 0, msg };
+    reject(new Error(msg));
   } catch (err) {
-    if (err.status !== 302) {
-      ctx.body = { state: 0, msg: `网络错误 ${err.status}` };
-      return;
-    }
-    let user = await User.findOne({ stuid });
-    if (!user) user = await User.create({ stuid, type: 2 });
-    const token = createToken(user);
-    user.lastLoginAt = Date.now();
-    user.save();
-    ctx.body = { state: 1, content: { user, token } };
+    if (err.status !== 302) reject(new Error(`网络错误 ${err.status}`));
+    resolve();
   }
-};
+});
 
-exports.wxoauth = async (ctx) => {
-  const code = ctx.request.body.code;
-  const wxtoken = await wx.oauth.getAccessToken(code);
-  const openid = wxtoken.data.openid;
-  let user = await User.findOne({ openid });
-  if (!user) {
-    const wxinfo = await wx.api.getUser({
-      openid,
-      lang: 'zh_CN',
-    });
-    const uploadPath = config.get('uploadPath');
-    const headimgPath = path.join(getDatePath('headimg'), String(Date.now()));
-    const res = await request.get(wxinfo.headimgurl);
-    fs.writeFileSync(headimgPath, res.body);
-    user = await User.create({
-      openid,
-      nickname: wxinfo.nickname,
-      sex: wxinfo.sex,
-      city: wxinfo.city,
-      province: wxinfo.province,
-      avatar: path.relative(uploadPath, headimgPath),
-      remark: wxinfo.remark,
-      type: 2,
-    });
-  }
+exports.login = async (ctx) => {
+  const { stuid, pwd } = ctx.request.body;
+  await authServer(stuid, pwd);
+  let user = await User.findOne({ stuid });
+  if (!user) user = await User.create({ stuid, type: 2 });
   const token = createToken(user);
+  user.lastLoginAt = Date.now();
+  user.save();
   ctx.body = { state: 1, content: { user, token } };
 };
 
@@ -84,6 +58,49 @@ exports.wxoauthurl = async (ctx) => {
   const baseurl = ctx.headers.referer;
   const authurl = wx.oauth.getAuthorizeURL(baseurl, 'wxoauth', 'snsapi_base');
   ctx.body = { state: 1, content: { authurl } };
+};
+
+exports.wxoauth = async (ctx) => {
+  const code = ctx.request.body.code;
+  const wxtoken = await wx.oauth.getAccessToken(code);
+  const openid = wxtoken.data.openid;
+  const user = await User.findOne({ openid });
+  if (user) {
+    const token = createToken(user);
+    ctx.body = { state: 1, content: { user, token } };
+  } else {
+    const wxinfo = await wx.api.getUser({
+      openid,
+      lang: 'zh_CN',
+    });
+    ctx.body = { state: 1, content: { user: wxinfo } };
+  }
+};
+
+exports.wxbind = async (ctx) => {
+  const { stuid, pwd, openid } = ctx.request.body;
+  await authServer(stuid, pwd);
+  const wxinfo = await wx.api.getUser({
+    openid,
+    lang: 'zh_CN',
+  });
+  const user = await User.create({
+    stuid,
+    openid,
+    nickname: wxinfo.nickname,
+    sex: wxinfo.sex,
+    city: wxinfo.city,
+    province: wxinfo.province,
+    avatar: path.relative(uploadPath, headimgPath),
+    remark: wxinfo.remark,
+    type: 3,
+  });
+  const headimgres = await request.get(wxinfo.headimgurl);
+  const uploadPath = config.get('uploadPath');
+  const headimgPath = path.join(getDatePath('headimg'), String(Date.now()));
+  fs.writeFileSync(headimgPath, headimgres.body);
+  const token = createToken(user);
+  ctx.body = { state: 1, content: { user, token } };
 };
 
 exports.logout = (ctx) => {
