@@ -15,7 +15,6 @@ const ObjectId = Schema.Types.ObjectId;
  * @param deleted       {Boolean}   删除标记
  * @param createdAt     {Date}      创建时间
  * @param updatedAt     {Date}      更新时间
- * @param sort          {Number}    排序值
  */
 
 const topicSchema = new Schema({
@@ -28,7 +27,6 @@ const topicSchema = new Schema({
   top: { type: Boolean, default: false },
   lock: { type: Boolean, default: false },
   deleted: { type: Boolean, default: false },
-  sort: { type: Number, default: 0, index: true },
 }, {
   timestamps: true,
 });

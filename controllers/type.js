@@ -2,12 +2,12 @@ const { Type } = require('../models');
 
 exports.add = async (ctx) => {
   const { name, type, sort } = ctx.request.body;
-  const lastType = await Type.findOne({ type }).sort({ sort: -1 });
+  const defaultSort = await Type.count({ type });
   const newType = await Type.create({
     name,
     type,
     creater: ctx.user._id,
-    sort: sort || (lastType ? lastType.sort + 1 : 0),
+    sort: sort || defaultSort + 1,
   });
   ctx.body = { state: 1, content: newType };
 };

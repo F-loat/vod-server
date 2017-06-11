@@ -3,7 +3,7 @@ const server = require('../bin/www');
 const t2d = require('../utils/test2doc');
 const createToken = require('../utils/token').create;
 const verifyToken = require('../utils/token').verify;
-const User = require('../models/user');
+const { User } = require('../models');
 require('chai').should();
 
 const request = supertest.agent(server);

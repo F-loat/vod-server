@@ -2,13 +2,11 @@ const { Topic } = require('../models');
 
 exports.add = async (ctx) => {
   const { title, content, type } = ctx.request.body;
-  const lastTopic = await Topic.findOne({ type }).sort({ sort: -1 });
   const newTopic = await Topic.create({
     title,
     content,
     type,
     author: ctx.user._id,
-    sort: lastTopic ? lastTopic.sort + 1 : 0,
   });
   ctx.body = { state: 1, content: newTopic };
 };

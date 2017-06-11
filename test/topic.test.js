@@ -1,10 +1,8 @@
 const supertest = require('supertest');
 const server = require('../bin/www');
-const t2d = require('../utils/test2doc');
+const { t2d } = require('../utils');
 const createToken = require('../utils/token').create;
-const User = require('../models/user');
-const Type = require('../models/type');
-const Topic = require('../models/topic');
+const { User, Type, Topic } = require('../models');
 require('chai').should();
 
 const request = supertest.agent(server);
@@ -13,21 +11,18 @@ describe('API-Topic', () => {
   beforeEach(async () => {
     const user = await User.create({ stuid: '000000' });
     const token = createToken(JSON.parse(JSON.stringify(user)));
-    const lastType = await Type.findOne({ type: 'video' })
-      .sort({ sort: -1 });
+    const defaultTypeSort = await Type.count({ type: 'video' });
     const type = await Type.create({
       name: '资源申请',
       type: 'topic',
       creater: user._id,
-      sort: lastType ? lastType.sort + 1 : 0,
+      sort: defaultTypeSort + 1,
     });
-    const lastTopic = await Topic.findOne({ type }).sort({ sort: -1 });
     const topic = await Topic.create({
       title: '测试',
       content: '测试测试测试',
       type: type._id,
       author: user._id,
-      sort: lastTopic ? lastTopic.sort + 1 : 0,
     });
     this.user = user;
     this.token = token;

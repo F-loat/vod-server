@@ -1,11 +1,8 @@
 const supertest = require('supertest');
 const server = require('../bin/www');
-const redis = require('../utils/redis');
-const t2d = require('../utils/test2doc');
+const { redis, t2d } = require('../utils');
 const createToken = require('../utils/token').create;
-const User = require('../models/user');
-const Type = require('../models/type');
-const Video = require('../models/video');
+const { User, Type, Video } = require('../models');
 require('chai').should();
 
 const request = supertest.agent(server);
@@ -14,15 +11,14 @@ describe('API-Video', () => {
   beforeEach(async () => {
     const user = await User.create({ stuid: '000000', type: 10 });
     const token = createToken(JSON.parse(JSON.stringify(user)));
-    const lastType = await Type.findOne({ type: 'video' })
-      .sort({ sort: -1 });
+    const defaultTypeSort = await Type.count({ type: 'video' });
     const type = await Type.create({
       name: '电影',
       type: 'video',
       creater: user._id,
-      sort: lastType ? lastType.sort + 1 : 0,
+      sort: defaultTypeSort + 1,
     });
-    const lastVideo = await Video.findOne().sort({ sort: -1 });
+    const defaultVideoSort = await Video.count();
     const video = await Video.create({
       title: '测试',
       aka: ['测试', '测试'],
@@ -34,7 +30,7 @@ describe('API-Video', () => {
       year: 2017,
       type: type._id,
       creater: user._id,
-      sort: lastVideo ? lastVideo.sort + 1 : 0,
+      sort: defaultVideoSort + 1,
     });
     this.user = user;
     this.token = token;

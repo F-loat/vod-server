@@ -1,9 +1,8 @@
 const supertest = require('supertest');
 const server = require('../bin/www');
-const t2d = require('../utils/test2doc');
+const { t2d } = require('../utils');
 const createToken = require('../utils/token').create;
-const User = require('../models/user');
-const Type = require('../models/type');
+const { User, Type } = require('../models');
 require('chai').should();
 
 const request = supertest.agent(server);
@@ -12,13 +11,12 @@ describe('API-Type', () => {
   beforeEach(async () => {
     const user = await User.create({ stuid: '000000', type: 10 });
     const token = createToken(JSON.parse(JSON.stringify(user)));
-    const lastType = await Type.findOne({ type: 'video' })
-      .sort({ sort: -1 });
+    const defaultTypeSort = await Type.count({ type: 'video' });
     const type = await Type.create({
       name: '电影',
       type: 'video',
       creater: user._id,
-      sort: lastType ? lastType.sort + 1 : 0,
+      sort: defaultTypeSort + 1,
     });
     this.user = user;
     this.token = token;

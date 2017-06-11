@@ -25,7 +25,7 @@ exports.add = async (ctx) => {
   const info = ctx.req.body || ctx.request.body;
   const poster = ctx.req.file || {};
   const posterPath = poster.path;
-  const lastVideo = await Video.findOne().sort({ sort: -1 });
+  const defaultSort = await Video.count();
   const video = await Video.create({
     title: info.title,
     aka: info.aka.split(','),
@@ -37,17 +37,16 @@ exports.add = async (ctx) => {
     year: info.year,
     type: info.type,
     creater: ctx.user._id,
-    sort: info.sort || (lastVideo ? lastVideo.sort + 1 : 0),
+    sort: info.sort || defaultSort + 1,
   });
   const episodes = info.episodes ? JSON.parse(info.episodes) : [];
-  const lastEpisode = await Episode
-    .findOne({ video: video._id }).sort({ sort: -1 });
+  const defaultEpisodeSort = await Episode.count({ video: video._id });
   const queue = episodes.map((episode, index) => Episode.create({
     name: episode.name,
     filePath: episode.path,
     video: video._id,
     creater: ctx.user._id,
-    sort: lastEpisode ? lastEpisode.sort + index + 1 : 0,
+    sort: defaultEpisodeSort + index + 1,
   }));
   await Promise.all(queue);
   ctx.body = { state: 1, content: video };
@@ -121,8 +120,14 @@ exports.list = async (ctx) => {
 
 exports.detail = async (ctx) => {
   const video = await Video.findById(ctx.query._id);
-  if (!video) throw new Error('not exist');
-  if (video.deleted === true) throw new Error('deleted');
+  if (!video) {
+    ctx.body = { state: 0, msg: 'not exist' };
+    return;
+  }
+  if (video.deleted === true) {
+    ctx.body = { state: 0, msg: 'deleted' };
+    return;
+  }
   ctx.body = { state: 1, content: video };
 };
 
@@ -148,14 +153,13 @@ exports.update = async (ctx) => {
   video.sort = info.sort || video.sort;
   video.save();
   const episodes = info.episodes ? JSON.parse(info.episodes) : [];
-  const lastEpisode = await Episode
-    .findOne({ video: video._id }).sort({ sort: -1 });
+  const defaultEpisodeSort = await Episode.count({ video: video._id });
   const queue = episodes.map((episode, index) => Episode.create({
     name: episode.name,
     filePath: episode.path,
     video: video._id,
     creater: ctx.user._id,
-    sort: lastEpisode ? lastEpisode.sort + index + 1 : 0,
+    sort: defaultEpisodeSort + index + 1,
   }));
   await Promise.all(queue);
   ctx.body = { state: 1, content: video };

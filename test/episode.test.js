@@ -14,15 +14,14 @@ describe('API-Episode', () => {
   beforeEach(async () => {
     const user = await User.create({ stuid: '000000', type: 10 });
     const token = createToken(JSON.parse(JSON.stringify(user)));
-    const lastType = await Type.findOne({ type: 'video' })
-      .sort({ sort: -1 });
+    const defaultTypeSort = await Type.count({ type: 'video' });
     const type = await Type.create({
       name: '电影',
       type: 'video',
       creater: user._id,
-      sort: lastType ? lastType.sort + 1 : 0,
+      sort: defaultTypeSort + 1,
     });
-    const lastVideo = await Video.findOne().sort({ sort: -1 });
+    const defaultVideoSort = await Video.count();
     const video = await Video.create({
       title: '测试',
       aka: ['测试', '测试'],
@@ -34,16 +33,15 @@ describe('API-Episode', () => {
       year: 2017,
       type: type._id,
       creater: user._id,
-      sort: lastVideo ? lastVideo.sort + 1 : 0,
+      sort: defaultVideoSort + 1,
     });
-    const lastEpisode = await Episode
-      .findOne({ video: video._id }).sort({ sort: -1 });
+    const defaultEpisodeSort = await Episode.count({ video: video._id });
     const episode = await Episode.create({
       name: '测试',
       filePath: 'episode/2017/5/20/hahaha.mp4',
       video: video._id,
       creater: user._id,
-      sort: lastEpisode ? lastEpisode.sort + 1 : 0,
+      sort: defaultEpisodeSort + 1,
     });
     this.user = user;
     this.token = token;
