@@ -9,6 +9,8 @@ const createToken = require('../utils/token').create;
 const expireToken = require('../utils/token').expire;
 const { getDatePath } = require('../utils/upload');
 
+const uploadPath = config.get('uploadPath');
+
 const authServer = (stuid, pwd) => new Promise(async (resolve, reject) => {
   const url = 'http://authserver.tjcu.edu.cn/authserver/login';
   const loginPage = await request.get(url).timeout({
@@ -56,7 +58,8 @@ exports.login = async (ctx) => {
 
 exports.wxoauthurl = async (ctx) => {
   const baseurl = ctx.headers.referer;
-  const authurl = wx.oauth.getAuthorizeURL(baseurl, 'wxoauth', 'snsapi_base');
+  const state = ctx.query.state;
+  const authurl = wx.oauth.getAuthorizeURL(baseurl, state, 'snsapi_base');
   ctx.body = { state: 1, content: { authurl } };
 };
 
@@ -69,36 +72,41 @@ exports.wxoauth = async (ctx) => {
     const token = createToken(user);
     ctx.body = { state: 1, content: { user, token } };
   } else {
-    const wxinfo = await wx.api.getUser({
-      openid,
-      lang: 'zh_CN',
-    });
-    ctx.body = { state: 1, content: { user: wxinfo } };
+    ctx.body = { state: 0 };
   }
 };
 
 exports.wxbind = async (ctx) => {
-  const { stuid, pwd, openid } = ctx.request.body;
-  await authServer(stuid, pwd);
+  const code = ctx.request.body.code;
+  const wxtoken = await wx.oauth.getAccessToken(code);
+  const openid = wxtoken.data.openid;
+  const oldUser = await User.findOne({ openid });
+  if (oldUser) {
+    ctx.body = { state: 0, msg: '该微信号已绑定其他账号' };
+    return;
+  }
   const wxinfo = await wx.api.getUser({
-    openid,
+    openid: openid,
     lang: 'zh_CN',
   });
-  const user = await User.create({
-    stuid,
-    openid,
-    nickname: wxinfo.nickname,
-    sex: wxinfo.sex,
-    city: wxinfo.city,
-    province: wxinfo.province,
-    avatar: path.relative(uploadPath, headimgPath),
-    remark: wxinfo.remark,
-    type: 3,
-  });
+  const user = await User.findById(ctx.user._id);
+  if (user.openid) {
+    ctx.body = { state: 0, msg: '该账号已绑定其他微信号' };
+    return;
+  }
   const headimgres = await request.get(wxinfo.headimgurl);
-  const uploadPath = config.get('uploadPath');
-  const headimgPath = path.join(getDatePath('headimg'), String(Date.now()));
+  const datePath = getDatePath('headimg');
+  const headimgPath = path.join(datePath, String(Date.now()));
   fs.writeFileSync(headimgPath, headimgres.body);
+  user.openid = openid;
+  user.nickname = wxinfo.nickname;
+  user.sex = wxinfo.sex;
+  user.city = wxinfo.city;
+  user.province = wxinfo.province;
+  user.avatar = path.relative(uploadPath, headimgPath);
+  user.remark = wxinfo.remark;
+  if (user.type < 3) user.type = 3;
+  user.save();
   const token = createToken(user);
   ctx.body = { state: 1, content: { user, token } };
 };

@@ -83,7 +83,7 @@ router
 router
   .post('/user/wxoauth', User.wxoauth);
 router
-  .post('/user/wxbind', User.wxbind);
+  .post('/user/wxbind', Filter.login, User.wxbind);
 router
   .get('/user/logout', Filter.login, User.logout);
 
