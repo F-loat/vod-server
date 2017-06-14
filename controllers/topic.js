@@ -38,7 +38,8 @@ exports.list = async (ctx) => {
 
 exports.detail = async (ctx) => {
   try {
-    const topic = await Topic.findById(ctx.query.id);
+    const topic = await Topic.findById(ctx.query.id)
+      .populate('author', 'nickname stuid avatar');
     if (!topic) throw new Error('not exist');
     if (topic.deleted === true) throw new Error('deleted');
     ctx.body = { state: 1, content: topic };

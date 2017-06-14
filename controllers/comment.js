@@ -18,7 +18,7 @@ exports.list = async (ctx) => {
   };
   const comments = await Comment
     .find(query)
-    .populate('commenter', 'nickname stuid')
+    .populate('commenter', 'nickname stuid avatar')
     .sort({ createdAt: -1 });
   ctx.body = { state: 1, content: comments };
 };
