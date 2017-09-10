@@ -1,9 +1,7 @@
 const supertest = require('supertest');
 const server = require('../bin/www');
-const t2d = require('../utils/test2doc');
-const createToken = require('../utils/token').create;
-const verifyToken = require('../utils/token').verify;
-const { User } = require('../models');
+const utils = require('../app/utils');
+const models = require('../app/models');
 require('chai').should();
 
 const request = supertest.agent(server);
@@ -11,7 +9,7 @@ const request = supertest.agent(server);
 describe('API-User', () => {
   beforeEach(async () => {
     const user = await User.create({ stuid: '000000', type: 10 });
-    const token = createToken(JSON.parse(JSON.stringify(user)));
+    const token = utils.token.create(Object.assign({}, user)));
     this.user = user;
     this.token = token;
   });
@@ -22,50 +20,16 @@ describe('API-User', () => {
     this.token = null;
   });
 
-  describe('userLogin', () => {
-    it('should return login status', async () => {
-      try {
-        const res = await t2d.test({
-          agent: request,
-          file: 'user',
-          group: '用户相关API',
-          title: '用户登录',
-          method: 'post',
-          url: '/request/user/login',
-          expect: 200,
-          params: {
-            stuid: {
-              value: '00000000',
-              type: 'String',
-              required: true,
-              desc: '学号',
-            },
-            pwd: {
-              value: 'test',
-              type: 'String',
-              required: true,
-              desc: '密码',
-            },
-          },
-        });
-        const body = res.body;
-        body.should.have.deep.property('state', 0);
-      } catch (err) {
-        console.log(err);
-      }
-    });
-  });
-
   describe('getUserList', () => {
     it('should return user list info', async () => {
       try {
-        const res = await t2d.test({
+        const res = await utils.t2d.test({
           agent: request,
           file: 'user',
           group: '用户相关API',
           title: '*获取用户列表*',
           method: 'get',
-          url: '/request/user/list',
+          url: '/request/users',
           headers: { Authorization: `Bearer ${this.token}` },
           expect: 200,
           params: {
@@ -100,13 +64,13 @@ describe('API-User', () => {
   describe('getUserDetail', () => {
     it('should return user detail info', async () => {
       try {
-        const res = await t2d.test({
+        const res = await utils.t2d.test({
           agent: request,
           file: 'user',
           group: '用户相关API',
           title: '获取用户信息',
           method: 'get',
-          url: '/request/user',
+          url: '/request/users/self',
           headers: { Authorization: `Bearer ${this.token}` },
           expect: 200,
           params: null,
@@ -122,22 +86,16 @@ describe('API-User', () => {
   describe('updateUser', () => {
     it('should return modified user info', async () => {
       try {
-        const res = await t2d.test({
+        const res = await utils.t2d.test({
           agent: request,
           file: 'user',
           group: '用户相关API',
           title: '*修改用户信息*',
           method: 'put',
-          url: '/request/user',
+          url: `/request/users/${this.user._id}`,
           headers: { Authorization: `Bearer ${this.token}` },
           expect: 200,
           params: {
-            _id: {
-              value: this.user._id,
-              type: 'String',
-              required: true,
-              desc: '用户Id',
-            },
             type: {
               value: 12,
               type: 'Number',

@@ -1,25 +1,21 @@
 const supertest = require('supertest');
 const server = require('../bin/www');
-const { redis, t2d } = require('../utils');
-const createToken = require('../utils/token').create;
-const { User, Type, Video } = require('../models');
+const utils = require('../app/utils');
+const models = require('../app/models');
 require('chai').should();
 
 const request = supertest.agent(server);
 
 describe('API-Video', () => {
   beforeEach(async () => {
-    const user = await User.create({ stuid: '000000', type: 10 });
-    const token = createToken(JSON.parse(JSON.stringify(user)));
-    const defaultTypeSort = await Type.count({ type: 'video' });
-    const type = await Type.create({
+    const user = await models.User.create({ stuid: '000000', type: 10 });
+    const token = utils.token.create(Object.assign({}, user)));
+    const type = await models.Type.create({
       name: '电影',
       type: 'video',
       creater: user._id,
-      sort: defaultTypeSort + 1,
     });
-    const defaultVideoSort = await Video.count();
-    const video = await Video.create({
+    const video = await models.Video.create({
       title: '测试',
       aka: ['测试', '测试'],
       performers: ['测试', '测试'],
@@ -30,7 +26,6 @@ describe('API-Video', () => {
       year: 2017,
       type: type._id,
       creater: user._id,
-      sort: defaultVideoSort + 1,
     });
     this.user = user;
     this.token = token;
@@ -39,53 +34,30 @@ describe('API-Video', () => {
   });
   afterEach(async () => {
     const { user, type, video } = this;
-    User.remove({ _id: user._id }).exec();
-    Type.remove({ _id: type._id }).exec();
-    Video.remove({ _id: video._id }).exec();
+    await Promise.all([
+      models.User.remove({ _id: user._id }),
+      models.Type.remove({ _id: type._id }),
+      models.Video.remove({ _id: video._id }),
+    ]);
     this.user = null;
     this.token = null;
     this.type = null;
     this.video = null;
   });
   after(async () => {
-    if (process.env.GEN_DOC > 0) t2d.generate();
-  });
-
-  describe('getTypedVideoList', () => {
-    redis.del('videoTypedLists');
-    it('should return typed video list', async () => {
-      try {
-        const res = await t2d.test({
-          agent: request,
-          file: 'video',
-          group: '视频相关API',
-          title: '获取分类视频列表',
-          method: 'get',
-          url: '/request/video/typed',
-          headers: { Accept: 'application/json' },
-          expect: 200,
-          params: null,
-        });
-        const body = res.body;
-        body.should.have.deep.property('state', 1);
-        body.should.have.deep.property('content')
-          .a('array').length.least(0);
-      } catch (err) {
-        console.log(err);
-      }
-    });
+    if (process.env.GEN_DOC > 0) utils.t2d.generate();
   });
 
   describe('getVideoList', () => {
     it('should return video list', async () => {
       try {
-        const res = await t2d.test({
+        const res = await utils.t2d.test({
           agent: request,
           file: 'video',
           group: '视频相关API',
           title: '获取视频列表',
           method: 'get',
-          url: '/request/video/list',
+          url: '/request/videos',
           headers: { Accept: 'application/json' },
           expect: 200,
           params: {
@@ -108,7 +80,7 @@ describe('API-Video', () => {
               desc: '查询页数',
             },
             search: {
-              value: '测',
+              value: '搜索',
               type: 'String',
               required: false,
               desc: '搜索条件',
@@ -126,23 +98,15 @@ describe('API-Video', () => {
   describe('getVideoDetail', () => {
     it('should return video detail info', async () => {
       try {
-        const res = await t2d.test({
+        const res = await utils.t2d.test({
           agent: request,
           file: 'video',
           group: '视频相关API',
           title: '获取视频详情',
           method: 'get',
-          url: '/request/video',
+          url: `/request/videos/${this.video._id}`,
           headers: { Accept: 'application/json' },
           expect: 200,
-          params: {
-            _id: {
-              value: this.video._id,
-              type: 'String',
-              required: true,
-              desc: '视频Id',
-            },
-          },
         });
         const body = res.body;
         body.should.have.deep.property('state', 1);
@@ -155,13 +119,13 @@ describe('API-Video', () => {
   describe('addVideo', () => {
     it('should return add status', async () => {
       try {
-        const res = await t2d.test({
+        const res = await utils.t2d.test({
           agent: request,
           file: 'video',
           group: '视频相关API',
           title: '*新增视频*',
           method: 'post',
-          url: '/request/video',
+          url: '/request/videos',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
             Authorization: `Bearer ${this.token}`,
@@ -238,7 +202,7 @@ describe('API-Video', () => {
         });
         const body = res.body;
         body.should.have.deep.property('state', 1);
-        Video.remove({ _id: body.content._id }).exec();
+        await models.Video.remove({ _id: body.content._id });
       } catch (err) {
         console.log(err);
       }
@@ -248,25 +212,19 @@ describe('API-Video', () => {
   describe('updateVideo', () => {
     it('should return modified video info', async () => {
       try {
-        const res = await t2d.test({
+        const res = await utils.t2d.test({
           agent: request,
           file: 'video',
           group: '视频相关API',
           title: '*修改视频*',
           method: 'put',
-          url: '/request/video',
+          url: `/request/videos/${this.video._id}`,
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
             Authorization: `Bearer ${this.token}`,
           },
           expect: 200,
           params: {
-            _id: {
-              value: this.video._id,
-              type: 'String',
-              required: true,
-              desc: '视频Id',
-            },
             title: {
               value: '修改',
               type: 'String',
@@ -346,23 +304,15 @@ describe('API-Video', () => {
   describe('delVideo', () => {
     it('should return delete status', async () => {
       try {
-        const res = await t2d.test({
+        const res = await utils.t2d.test({
           agent: request,
           file: 'video',
           group: '视频相关API',
           title: '*删除视频*',
           method: 'delete',
-          url: '/request/video',
+          url: `/request/videos/${this.video._id}`,
           headers: { Authorization: `Bearer ${this.token}` },
           expect: 200,
-          params: {
-            _id: {
-              value: this.video._id,
-              type: 'String',
-              required: true,
-              desc: '视频Id',
-            },
-          },
         });
         const body = res.body;
         body.should.have.deep.property('state', 1);

@@ -1,24 +1,23 @@
 const supertest = require('supertest');
 const server = require('../bin/www');
-const { t2d } = require('../utils');
-const createToken = require('../utils/token').create;
-const { User, Type, Topic } = require('../models');
+const utils = require('../app/utils');
+const models = require('../app/models');
 require('chai').should();
 
 const request = supertest.agent(server);
 
 describe('API-Topic', () => {
   beforeEach(async () => {
-    const user = await User.create({ stuid: '000000' });
-    const token = createToken(JSON.parse(JSON.stringify(user)));
-    const defaultTypeSort = await Type.count({ type: 'video' });
-    const type = await Type.create({
+    const user = await models.User.create({ stuid: '000000' });
+    const token = utils.token.create(Object.assign({}, user)));
+    const defaultTypeSort = await models.Type.count({ type: 'video' });
+    const type = await models.Type.create({
       name: '资源申请',
       type: 'topic',
       creater: user._id,
       sort: defaultTypeSort + 1,
     });
-    const topic = await Topic.create({
+    const topic = await models.Topic.create({
       title: '测试',
       content: '测试测试测试',
       type: type._id,
@@ -31,9 +30,11 @@ describe('API-Topic', () => {
   });
   afterEach(async () => {
     const { user, type, topic } = this;
-    User.remove({ _id: user._id }).exec();
-    Type.remove({ _id: type._id }).exec();
-    Topic.remove({ _id: topic._id }).exec();
+    await Promise([
+      models.User.remove({ _id: user._id }),
+      models.Type.remove({ _id: type._id }),
+      models.Topic.remove({ _id: topic._id }),
+    ]);
     this.user = null;
     this.token = null;
     this.type = null;
@@ -43,13 +44,13 @@ describe('API-Topic', () => {
   describe('getTopicList', () => {
     it('should return topic list info', async () => {
       try {
-        const res = await t2d.test({
+        const res = await utils.t2d.test({
           agent: request,
           file: 'topic',
           group: '论坛相关API',
           title: '获取帖子列表',
           method: 'get',
-          url: '/request/topic/list',
+          url: '/request/topics',
           headers: { Accept: 'application/json' },
           expect: 200,
           params: {
@@ -84,23 +85,15 @@ describe('API-Topic', () => {
   describe('getTopicDetail', () => {
     it('should return topic detail info', async () => {
       try {
-        const res = await t2d.test({
+        const res = await utils.t2d.test({
           agent: request,
           file: 'topic',
           group: '论坛相关API',
           title: '获取帖子详情',
           method: 'get',
-          url: '/request/topic',
+          url: `/request/topics/${this.topic._id}`,
           headers: { Accept: 'application/json' },
           expect: 200,
-          params: {
-            id: {
-              value: this.topic._id,
-              type: 'String',
-              required: true,
-              desc: '帖子Id',
-            },
-          },
         });
         const body = res.body;
         body.should.have.deep.property('state', 1);
@@ -113,13 +106,13 @@ describe('API-Topic', () => {
   describe('addTopic', () => {
     it('should return new topic info', async () => {
       try {
-        const res = await t2d.test({
+        const res = await utils.t2d.test({
           agent: request,
           file: 'topic',
           group: '论坛相关API',
           title: '新增帖子',
           method: 'post',
-          url: '/request/topic',
+          url: '/request/topics',
           headers: { Authorization: `Bearer ${this.token}` },
           expect: 200,
           params: {
@@ -145,7 +138,7 @@ describe('API-Topic', () => {
         });
         const body = res.body;
         body.should.have.deep.property('state', 1);
-        Topic.remove({ _id: body.content._id }).exec();
+        await Topic.remove({ _id: body.content._id });
       } catch (err) {
         console.log(err);
       }

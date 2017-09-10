@@ -1,18 +1,16 @@
 const supertest = require('supertest');
 const server = require('../bin/www');
-const { t2d } = require('../utils');
-const createToken = require('../utils/token').create;
-const { User, Type } = require('../models');
+const utils = require('../app/utils');
+const models = require('../app/models');
 require('chai').should();
 
 const request = supertest.agent(server);
 
 describe('API-Type', () => {
   beforeEach(async () => {
-    const user = await User.create({ stuid: '000000', type: 10 });
-    const token = createToken(JSON.parse(JSON.stringify(user)));
-    const defaultTypeSort = await Type.count({ type: 'video' });
-    const type = await Type.create({
+    const user = await models.User.create({ stuid: '000000', type: 10 });
+    const token = utils.token.create(Object.assign({}, user)));
+    const type = await models.Type.create({
       name: '电影',
       type: 'video',
       creater: user._id,
@@ -24,8 +22,10 @@ describe('API-Type', () => {
   });
   afterEach(async () => {
     const { user, type } = this;
-    User.remove({ _id: user._id }).exec();
-    Type.remove({ _id: type._id }).exec();
+    await Promise.all([
+      models.User.remove({ _id: user._id }),
+      models.Type.remove({ _id: type._id }),
+    ]);
     this.user = null;
     this.token = null;
     this.type = null;
@@ -34,13 +34,13 @@ describe('API-Type', () => {
   describe('getTypeList', () => {
     it('should return type list', async () => {
       try {
-        const res = await t2d.test({
+        const res = await utils.t2d.test({
           agent: request,
           file: 'type',
           group: '分类相关API',
           title: '获取分类列表',
           method: 'get',
-          url: '/request/type/list',
+          url: '/request/types',
           headers: { Accept: 'application/json' },
           expect: 200,
           params: {
@@ -65,13 +65,13 @@ describe('API-Type', () => {
   describe('addType', () => {
     it('should return new type info', async () => {
       try {
-        const res = await t2d.test({
+        const res = await utils.t2d.test({
           agent: request,
           file: 'type',
           group: '分类相关API',
           title: '*新增分类*',
           method: 'post',
-          url: '/request/type',
+          url: '/request/types',
           headers: { Authorization: `Bearer ${this.token}` },
           expect: 200,
           params: {
@@ -97,7 +97,7 @@ describe('API-Type', () => {
         });
         const body = res.body;
         body.should.have.deep.property('state', 1);
-        Type.remove({ _id: body.content._id }).exec();
+        await models.Type.remove({ _id: body.content._id });
       } catch (err) {
         console.log(err);
       }
@@ -107,22 +107,16 @@ describe('API-Type', () => {
   describe('updateType', () => {
     it('should return modified info', async () => {
       try {
-        const res = await t2d.test({
+        const res = await utils.t2d.test({
           agent: request,
           file: 'type',
           group: '分类相关API',
           title: '*修改分类*',
           method: 'post',
-          url: '/request/type',
+          url: `/request/types/${this.type._id}`,
           headers: { Authorization: `Bearer ${this.token}` },
           expect: 200,
           params: {
-            _id: {
-              value: this.type._id,
-              type: 'String',
-              required: true,
-              desc: '分类id',
-            },
             name: {
               value: '综艺',
               type: 'String',
@@ -139,7 +133,7 @@ describe('API-Type', () => {
         });
         const body = res.body;
         body.should.have.deep.property('state', 1);
-        Type.remove({ _id: body.content._id }).exec();
+        await models.Type.remove({ _id: body.content._id });
       } catch (err) {
         console.log(err);
       }
@@ -149,23 +143,15 @@ describe('API-Type', () => {
   describe('delType', () => {
     it('should return delete status', async () => {
       try {
-        const res = await t2d.test({
+        const res = await utils.t2d.test({
           agent: request,
           file: 'type',
           group: '分类相关API',
           title: '*删除分类*',
           method: 'delete',
-          url: '/request/type',
+          url: `/request/type/${this.type._id}`,
           headers: { Authorization: `Bearer ${this.token}` },
           expect: 200,
-          params: {
-            _id: {
-              value: this.type._id,
-              type: 'String',
-              required: true,
-              desc: '分类Id',
-            },
-          },
         });
         const body = res.body;
         body.should.have.deep.property('state', 1);

@@ -1,28 +1,21 @@
 const supertest = require('supertest');
 const server = require('../bin/www');
-const t2d = require('../utils/test2doc');
-const createToken = require('../utils/token').create;
-const User = require('../models/user');
-const Type = require('../models/type');
-const Video = require('../models/video');
-const Episode = require('../models/episode');
+const utils = require('../app/utils');
+const models = require('../app/models');
 require('chai').should();
 
 const request = supertest.agent(server);
 
 describe('API-Episode', () => {
   beforeEach(async () => {
-    const user = await User.create({ stuid: '000000', type: 10 });
-    const token = createToken(JSON.parse(JSON.stringify(user)));
-    const defaultTypeSort = await Type.count({ type: 'video' });
-    const type = await Type.create({
+    const user = await models.User.create({ stuid: '000000', type: 10 });
+    const token = utils.token.create(Object.assign({}, user)));
+    const type = await models.Type.create({
       name: '电影',
       type: 'video',
       creater: user._id,
-      sort: defaultTypeSort + 1,
     });
-    const defaultVideoSort = await Video.count();
-    const video = await Video.create({
+    const video = await models.Video.create({
       title: '测试',
       aka: ['测试', '测试'],
       performers: ['测试', '测试'],
@@ -33,15 +26,12 @@ describe('API-Episode', () => {
       year: 2017,
       type: type._id,
       creater: user._id,
-      sort: defaultVideoSort + 1,
     });
-    const defaultEpisodeSort = await Episode.count({ video: video._id });
-    const episode = await Episode.create({
+    const episode = await models.Episode.create({
       name: '测试',
       filePath: 'episode/2017/5/20/hahaha.mp4',
       video: video._id,
       creater: user._id,
-      sort: defaultEpisodeSort + 1,
     });
     this.user = user;
     this.token = token;
@@ -51,10 +41,12 @@ describe('API-Episode', () => {
   });
   afterEach(async () => {
     const { user, type, video, episode } = this;
-    User.remove({ _id: user._id }).exec();
-    Type.remove({ _id: type._id }).exec();
-    Video.remove({ _id: video._id }).exec();
-    Episode.remove({ _id: episode._id }).exec();
+    await Promise.all([
+      models.User.remove({ _id: user._id }),
+      models.Type.remove({ _id: type._id }),
+      models.Video.remove({ _id: video._id }),
+      models.Episode.remove({ _id: episode._id }),
+    ]);
     this.user = null;
     this.token = null;
     this.type = null;
@@ -65,13 +57,13 @@ describe('API-Episode', () => {
   describe('getEpisodeList', () => {
     it('should return video list', async () => {
       try {
-        const res = await t2d.test({
+        const res = await utils.t2d.test({
           agent: request,
           file: 'episode',
           group: '剧集相关API',
           title: '获取剧集列表',
           method: 'get',
-          url: '/request/episode/list',
+          url: '/request/episodes',
           headers: { Accept: 'application/json' },
           expect: 200,
           params: {
