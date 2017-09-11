@@ -13,7 +13,7 @@ exports.index = async (ctx) => {
     models.Comment
       .find(query)
       .sort(sort)
-      .populate('creater', 'nickname')
+      .populate('creater', 'nickname avatar')
       .skip(page > 0 ? (page - 1) * limit : 0)
       .limit(Number(limit)),
     models.Comment.count(query),

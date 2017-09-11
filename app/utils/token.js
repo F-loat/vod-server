@@ -1,4 +1,3 @@
-const fs = require('fs');
 const jwt = require('jwt-simple');
 const config = require('config');
 const moment = require('moment');

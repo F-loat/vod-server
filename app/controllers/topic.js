@@ -13,7 +13,7 @@ exports.index = async (ctx) => {
     models.Topic
       .find(query)
       .sort(sort)
-      .populate('author', 'nickname avatar')
+      .populate('creater', 'nickname avatar')
       .skip(page > 0 ? (page - 1) * limit : 0)
       .limit(Number(limit)),
     models.Topic.count(query),
@@ -25,7 +25,7 @@ exports.index = async (ctx) => {
 exports.show = async (ctx) => {
   const topic = await models.Topic
     .findById(ctx.params.id)
-    .populate('author', 'nickname avatar');
+    .populate('creater', 'nickname avatar');
   if (!topic) {
     ctx.status = 404;
     return;
