@@ -23,7 +23,7 @@ exports.verify = async (ctx) => {
   try {
     if (!token || token === 'undefined') {
       ctx.status = 403;
-      ctx.body = { state: 0, msg: '访问受限' };
+      ctx.body = '访问受限';
       return false;
     }
     const user = jwt.decode(token.substring(7), secretKey);

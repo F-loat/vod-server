@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const config = require('config');
 const cheerio = require('cheerio');
 const CryptoJS = require('crypto-js');
@@ -5,6 +7,27 @@ const models = require('../models');
 const utils = require('../utils');
 
 const secretKey = config.get('secret_key');
+
+const getWXInfo = code => new Promise(async (resolve, reject) => {
+  try {
+    const wxtoken = await utils.wechat.oauth.getAccessToken(code);
+    const openid = wxtoken.data.openid;
+    const wxinfo = await utils.wechat.api.getUser({
+      openid,
+      lang: 'zh_CN',
+    });
+    const headimgres = await utils.request.get(wxinfo.headimgurl);
+    const datePath = utils.upload.getDatePath('headimg');
+    const uploadPath = config.get('uploadPath');
+    const headimgPath = path.join(datePath, String(Date.now()));
+    fs.writeFileSync(headimgPath, headimgres.body);
+    wxinfo.avatar = path.relative(uploadPath, headimgPath).replace(/\\/g, '/');
+    resolve(wxinfo);
+  } catch (err) {
+    reject(err);
+  }
+});
+
 
 const authServer = data => new Promise(async (resolve, reject) => {
   const { username, password, captcha } = data;
@@ -41,16 +64,6 @@ const authServer = data => new Promise(async (resolve, reject) => {
     resolve();
   }
 });
-
-exports.wxoauthurl = async (ctx) => {
-  const { state } = ctx.query;
-  const baseurl = ctx.headers.referer;
-
-  const authurl = utils.wechat.oauth
-    .getAuthorizeURL(baseurl, state, 'snsapi_base');
-
-  ctx.body = authurl;
-};
 
 exports.index = async (ctx) => {
   const {
@@ -120,8 +133,20 @@ exports.create = async (ctx) => {
 };
 
 exports.update = async (ctx) => {
-  const { _id, type } = ctx.request.body;
-  await models.User.update({ _id }, { type });
+  if (ctx.query.type === 'code') {
+    const wxInfo = await getWXInfo(ctx.request.body.code);
+    await models.User.update({
+      _id: ctx.user._id,
+    }, wxInfo);
+    ctx.status = 200;
+    return;
+  }
+  const { body } = ctx.request;
+  await models.User.update({
+    _id: ctx.params.id === 'self' ? ctx.user._id : ctx.params.id,
+  }, {
+    type: body.type,
+  });
   ctx.status = 200;
 };
 

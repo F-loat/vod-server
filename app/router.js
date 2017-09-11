@@ -83,8 +83,6 @@ router.delete('/users/:id', Filter.admin, User.destroy);
 router.post('/tokens', Token.create);
 router.delete('/tokens/:id', Filter.login, Token.destroy);
 
-router.get('/users/wxoauth/url', User.wxoauthurl);
-
 router.post('/files', Filter.admin, upload.single('file'), File.create);
 router.get('/logs', Filter.admin, Log.index);
 

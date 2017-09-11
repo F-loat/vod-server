@@ -1,28 +1,9 @@
-const path = require('path');
 const config = require('config');
 const CryptoJS = require('crypto-js');
 const models = require('../models');
 const utils = require('../utils');
 
 const secretKey = config.get('secret_key');
-
-const getWXInfo = openid => new Promise(async (resolve, reject) => {
-  try {
-    const wxinfo = await utils.wechat.api.getUser({
-      openid,
-      lang: 'zh_CN',
-    });
-    const headimgres = await utils.request.get(wxinfo.headimgurl);
-    const datePath = utils.upload.getDatePath('headimg');
-    const uploadPath = config.get('uploadPath');
-    const headimgPath = path.join(datePath, String(Date.now()));
-    utils.fs.writeFileSync(headimgPath, headimgres.body);
-    wxinfo.avatar = path.relative(uploadPath, headimgPath);
-    resolve(wxinfo);
-  } catch (err) {
-    reject(err);
-  }
-});
 
 exports.create = async (ctx) => {
   const { type = 'password' } = ctx.query;
@@ -45,7 +26,7 @@ exports.create = async (ctx) => {
   }
   if (!user) {
     ctx.status = 404;
-    ctx.body = '该账号不存在';
+    ctx.body = type === 'code' ? '首次访问请手动登录' : '该账号不存在';
     return;
   }
   const token = utils.token.create(user);
