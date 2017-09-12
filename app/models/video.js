@@ -13,6 +13,8 @@ const ObjectId = Schema.Types.ObjectId;
  * @param summary          {String}    描述
  * @param year             {String}    年份
  * @param type             {ObjectId}  类型
+ * @param reply            {Number}    评论数
+ * @param visit            {Number}    浏览数
  * @param creater          {ObjectId}  上传者
  * @param episodes         {Object}    剧集信息
  * @param createdAt        {Date}      创建时间
@@ -30,6 +32,8 @@ const videoSchema = new Schema({
   summary: { type: String },
   year: { type: String },
   type: [{ type: ObjectId, ref: 'Type' }],
+  reply: { type: Number, default: 0 },
+  visit: { type: Number, default: 0 },
   creater: [{ type: ObjectId, ref: 'User' }],
   random: { type: Number, default: Math.random, index: true },
 }, {

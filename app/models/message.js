@@ -6,7 +6,7 @@ const ObjectId = Schema.Types.ObjectId;
 /**
  * @param belong       {ObjectId}  主题
  * @param master       {ObjectId}  所有者
- * @param author       {ObjectId}  发布者
+ * @param creater      {ObjectId}  发布者
  * @param read         {Boolean}   已读标记
  * @param type         {String}    类型
  * @param createdAt    {Date}      创建时间
@@ -16,7 +16,7 @@ const ObjectId = Schema.Types.ObjectId;
 const messageSchema = new Schema({
   belong: { type: ObjectId, index: true },
   master: { type: ObjectId, ref: 'User', index: true },
-  author: { type: ObjectId, ref: 'User' },
+  creater: { type: ObjectId, ref: 'User' },
   read: { type: Boolean, default: false },
   type: { type: ObjectId, ref: 'Type' },
 }, {

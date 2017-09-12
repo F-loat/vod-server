@@ -23,7 +23,8 @@ exports.index = async (ctx) => {
 };
 
 exports.show = async (ctx) => {
-  ctx.body = 'working';
+  const type = await models.Type.findById(ctx.params.id);
+  ctx.body = type;
 };
 
 exports.create = async (ctx) => {

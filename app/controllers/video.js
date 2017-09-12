@@ -45,6 +45,8 @@ exports.show = async (ctx) => {
     ctx.status = 404;
     return;
   }
+  video.visit += 1;
+  video.save();
   ctx.body = video;
 };
 

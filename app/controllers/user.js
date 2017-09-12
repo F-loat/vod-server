@@ -3,6 +3,7 @@ const path = require('path');
 const config = require('config');
 const cheerio = require('cheerio');
 const CryptoJS = require('crypto-js');
+const uuid = require('uuid/v4');
 const models = require('../models');
 const utils = require('../utils');
 
@@ -19,7 +20,7 @@ const getWXInfo = code => new Promise(async (resolve, reject) => {
     const headimgres = await utils.request.get(wxinfo.headimgurl);
     const datePath = utils.upload.getDatePath('headimg');
     const uploadPath = config.get('uploadPath');
-    const headimgPath = path.join(datePath, String(Date.now()));
+    const headimgPath = path.join(datePath, uuid());
     fs.writeFileSync(headimgPath, headimgres.body);
     wxinfo.avatar = path.relative(uploadPath, headimgPath).replace(/\\/g, '/');
     resolve(wxinfo);

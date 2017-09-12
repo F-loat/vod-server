@@ -12,6 +12,7 @@ exports.index = async (ctx) => {
   const [topics, total] = await Promise.all([
     models.Topic
       .find(query)
+      .select('-content')
       .sort(sort)
       .populate('creater', 'nickname avatar')
       .skip(page > 0 ? (page - 1) * limit : 0)
@@ -30,6 +31,8 @@ exports.show = async (ctx) => {
     ctx.status = 404;
     return;
   }
+  topic.visit += 1;
+  topic.save();
   ctx.body = topic;
 };
 
