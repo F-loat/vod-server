@@ -1,5 +1,10 @@
+const fs = require('fs');
+const path = require('path');
+const config = require('config');
 const utils = require('../utils');
 const models = require('../models');
+
+const uploadPath = config.get('uploadPath');
 
 /**
  * @param type   {String}  查询类型
@@ -30,6 +35,17 @@ exports.index = async (ctx) => {
   ctx.body = { episodes, total };
 };
 
+exports.show = async (ctx) => {
+  const { progress } = ctx.query;
+
+  const episode = await models.Episode
+    .findById(ctx.params.id)
+    .populate('creater', 'nickname');
+
+  if (Number(progress)) episode.progress = utils.transcode.show(ctx.params.id);
+  ctx.body = episode;
+};
+
 exports.create = async (ctx) => {
   const { body } = ctx.request;
 
@@ -51,7 +67,7 @@ exports.transcode = async (ctx) => {
     ctx.body = '超出转码并发限额';
     return;
   }
-  await utils.transcode(ctx.params.id);
+  await utils.transcode.create(ctx.params.id);
   ctx.status = 202;
 };
 
@@ -60,5 +76,22 @@ exports.update = async (ctx) => {
 };
 
 exports.destroy = async (ctx) => {
-  ctx.body = 'working';
+  const episode = await models.Episode.findById(ctx.params.id);
+  if (!episode) {
+    ctx.status = 400;
+    return;
+  }
+  if (episode.state === 1) {
+    ctx.status = 412;
+    ctx.body = '转码中的视频不可删除';
+    return;
+  }
+  if (!episode.path) return;
+  const episodePath = path.join(uploadPath, episode.path);
+  if (fs.existsSync(episodePath)) fs.unlinkSync(episodePath);
+  if (fs.existsSync(`${episodePath}.mp4`)) fs.unlinkSync(`${episodePath}.mp4`);
+  if (fs.existsSync(`${episodePath}.torrent`)) fs.unlinkSync(`${episodePath}.torrent`);
+  episode.remove();
+
+  ctx.status = 200;
 };

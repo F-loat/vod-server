@@ -44,8 +44,10 @@ router.put('/videos/:id', Filter.admin, Video.update);
 router.delete('/videos/:id', Filter.admin, Video.destroy);
 
 router.get('/episodes', Episode.index);
+router.get('/episodes/:id', Episode.show);
 router.post('/episodes', Filter.admin, Episode.create);
 router.get('/episodes/:id/transcode', Filter.admin, Episode.transcode);
+router.delete('/episodes/:id', Filter.admin, Episode.destroy);
 
 router.get('/danmakus', Danmaku.index);
 router.get('/danmakus/:id', Danmaku.show);

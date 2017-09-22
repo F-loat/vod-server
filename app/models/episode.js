@@ -7,6 +7,7 @@ const ObjectId = Schema.Types.ObjectId;
  * @param name            {String}    标题
  * @param belong          {ObjectId}  所属视频
  * @param path            {String}    文件位置
+ * @param progress        {Number}    转码进度
  * @param state           {Number}    状态
  * @param creater         {ObjectId}  创建者
  * @param createdAt       {Date}      创建时间
@@ -17,6 +18,7 @@ const episodeSchema = new Schema({
   name: { type: String },
   belong: { type: ObjectId, ref: 'Video' },
   path: { type: String },
+  progress: { type: Number },
   state: { type: Number, default: 0 },
   creater: { type: ObjectId, ref: 'User' },
 }, {

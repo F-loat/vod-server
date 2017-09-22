@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const config = require('config');
 const models = require('../models');
+const utils = require('../utils');
 
 const uploadPath = config.get('uploadPath');
 
@@ -104,23 +105,38 @@ exports.update = async (ctx) => {
 };
 
 exports.destroy = async (ctx) => {
-  const video = await models.Video.findByIdAndRemove(ctx.params.id);
+  const video = await models.Video.findById(ctx.params.id);
 
   if (!video) {
     ctx.status = 400;
     ctx.body = '该视频不存在';
     return;
   }
-  const { poster } = video;
-  if (poster) {
-    fs.unlinkSync(path.join(uploadPath, poster));
+  const transCount = await models.Episode.count({
+    belong: video._id,
+    state: 1,
+  });
+  if (transCount !== 0) {
+    ctx.status = 412;
+    ctx.body = '转码中的视频不可删除';
+    return;
   }
   const episodes = await models.Episode.find({ belong: video._id });
-  episodes.forEach((episode) => {
-    if (episode.path) fs.unlinkSync(path.join(uploadPath, episode.path));
+  episodes.forEach(async (episode) => {
+    if (!episode.path) return;
+    const episodePath = path.join(uploadPath, episode.path);
+    if (fs.existsSync(episodePath)) fs.unlinkSync(episodePath);
+    if (fs.existsSync(`${episodePath}.mp4`)) fs.unlinkSync(`${episodePath}.mp4`);
+    if (fs.existsSync(`${episodePath}.torrent`)) fs.unlinkSync(`${episodePath}.torrent`);
     episode.remove();
   });
+  if (video.poster) {
+    const posterPath = path.join(uploadPath, video.poster);
+    if (fs.existsSync(posterPath)) fs.unlinkSync(posterPath);
+  }
+  await models.Comment.remove({ belong: video._id });
+  video.remove();
 
   ctx.status = 200;
-  console.info(`视频 ${video.title} 被管理员${ctx.user.username}删除`);
+  console.info(`视频 ${video.title} 被管理员 ${ctx.user.username} 删除`);
 };
