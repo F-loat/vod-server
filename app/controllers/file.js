@@ -1,23 +1,15 @@
 const path = require('path');
 const config = require('config');
-const models = require('../models');
 
 exports.create = async (ctx) => {
   const { file } = ctx.req;
 
-  const realPath = file && file.path;
-  if (!realPath) {
+  if (!file || !file.path) {
     ctx.status = 400;
     return;
   }
   const uploadPath = config.get('uploadPath');
-  const relativePath = path.relative(uploadPath, realPath);
-  const normalPath = relativePath.replace(/\\/g, '/');
-  await models.File.create({
-    path: normalPath,
-    type: ctx.query.type,
-    creater: ctx.user._id,
-  });
+  const relativePath = path.relative(uploadPath, file.path);
 
-  ctx.body = normalPath;
+  ctx.body = relativePath.replace(/\\/g, '/');
 };
