@@ -1,0 +1,21 @@
+const tracker = require('bittorrent-tracker');
+
+const server = new tracker.Server({
+  ws: true,
+})
+
+server.on('error', (err) => {
+  console.error(err.message)
+})
+
+server.on('warning', (err) => {
+  console.warning(err.message)
+})
+
+server.on('start', (addr) => {
+  console.log('got start message from ' + addr);
+})
+
+server.listen(6969);
+
+module.exports = server;

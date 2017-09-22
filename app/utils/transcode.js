@@ -2,11 +2,13 @@ const fs = require('fs');
 const path = require('path');
 const config = require('config');
 const ffmpeg = require('fluent-ffmpeg');
+const createTorrent = require('create-torrent');
 const models = require('../models');
 
 const uploadPath = config.get('uploadPath');
+const progressTemp = {};
 
-const transcode = async (id) => {
+const create = async (id) => {
   let episode;
   if (id) {
     episode = await models.Episode.findById(id);
@@ -14,36 +16,68 @@ const transcode = async (id) => {
     episode = await models.Episode.findOne({ state: 0 });
   }
   if (!episode) return;
-  if (episode.state === 1 || episode.state === 2) {
-    transcode();
+  if (episode.state === 2) {
+    create();
     return;
   }
   episode.state = 1;
   episode.save();
-  const videoPath = path.join(uploadPath, episode.path);
-  const transPath = `${videoPath}-transcoding`;
-  const outputPath = path.join(transPath, 'index.m3u8');
-  fs.mkdirSync(transPath);
-  ffmpeg(videoPath)
-    .output(outputPath)
+  const episodePath = path.join(uploadPath, episode.path);
+  ffmpeg(episodePath)
+    .output(`${episodePath}.mp4`)
     .audioCodec('aac')
     .videoCodec('libx264')
-    .addOption('-hls_time', 15)
-    .addOption('-hls_list_size', 0)
     .addOption('-threads', 2)
+    .addOption('-movflags', 'faststart')
     .on('error', (err) => {
+      progressTemp[episode._id] = undefined;
       episode.state = -1;
       episode.save();
       console.error(err);
     })
+    .on('progress', (progress) => {
+      progressTemp[episode._id] = progress.percent;
+    })
     .on('end', async () => {
-      fs.unlinkSync(videoPath);
-      episode.state = 2;
-      episode.path = path.relative(uploadPath, transPath).replace(/\\/g, '/');
-      episode.save();
-      transcode();
+      progressTemp[episode._id] = undefined;
+      fs.unlinkSync(episodePath);
+      createTorrent(`${episodePath}.mp4`, {
+        announceList: [['wss://tracker.youngon.com.cn']],
+        urlList: [`${config.get('domain')}/assets/${episode.path}.mp4`],
+      }, (err, torrent) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        fs.writeFileSync(`${episodePath}.torrent`, torrent);
+        episode.state = 2;
+        episode.save();
+        create();
+      });
     })
     .run();
 };
 
-module.exports = transcode;
+const show = id => progressTemp[id];
+
+const destory = () => {
+  const command = ffmpeg();
+  command.kill('SIGSTOP');
+};
+
+const init = async () => {
+  destory();
+  const episodes = await models.Episode.find({ state: 1 });
+  episodes.forEach((episode) => {
+    create(episode._id);
+  });
+};
+
+init();
+
+module.exports = {
+  init,
+  create,
+  show,
+  destory,
+};

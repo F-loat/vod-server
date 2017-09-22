@@ -21,7 +21,7 @@ app.use(async (ctx, next) => {
   } catch (err) {
     console.error(err);
     ctx.status = 500;
-    ctx.body = err.message;
+    if (process.env.NODE_ENV === 'dev') ctx.body = err.message;
   }
 });
 app.use(router.routes());

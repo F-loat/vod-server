@@ -1,4 +1,5 @@
 {
+  "domain": "https://torrent.domain.com",
   "mongodb": "mongodb://localhost/vod",
   "redis": "redis://localhost:6379/0",
   "secret_key": "youngon",
