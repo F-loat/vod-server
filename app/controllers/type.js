@@ -41,16 +41,14 @@ exports.create = async (ctx) => {
 };
 
 exports.update = async (ctx) => {
-  const { _id, name, sort } = ctx.request.body;
-  const type = await models.Type
-    .findByIdAndUpdate(_id, {
-      $set: { name, sort },
-    }, { new: true });
-  ctx.body = type;
+  const _id = ctx.params.id;
+  const { name } = ctx.request.body;
+  await models.Type.update({ _id }, { name });
+  ctx.status = 200;
 };
 
 exports.destroy = async (ctx) => {
-  const _id = ctx.query._id;
+  const _id = ctx.params.id;
   await models.Type.remove({ _id });
   ctx.status = 200;
   console.info(`视频 ${_id} 被管理员 ${ctx.user.username} 删除`);

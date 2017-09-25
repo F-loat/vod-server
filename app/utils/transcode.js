@@ -65,18 +65,7 @@ const destory = () => {
   command.kill('SIGSTOP');
 };
 
-const init = async () => {
-  destory();
-  const episodes = await models.Episode.find({ state: 1 });
-  episodes.forEach((episode) => {
-    create(episode._id);
-  });
-};
-
-init();
-
 module.exports = {
-  init,
   create,
   show,
   destory,

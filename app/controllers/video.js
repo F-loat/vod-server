@@ -2,7 +2,6 @@ const fs = require('fs');
 const path = require('path');
 const config = require('config');
 const models = require('../models');
-const utils = require('../utils');
 
 const uploadPath = config.get('uploadPath');
 

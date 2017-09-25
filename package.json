@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "start": "./node_modules/.bin/nodemon bin/www",
     "dev": "cross-env NODE_ENV=dev ./node_modules/.bin/nodemon bin/www",
     "lint": "eslint --format node_modules/eslint-friendly-formatter .",
     "test": "mocha --harmony",

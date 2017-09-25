@@ -78,13 +78,14 @@ exports.index = async (ctx) => {
   const [users, total] = await Promise.all([
     models.User
       .find(query)
+      .select('-password')
       .sort(sort)
       .skip(page > 0 ? (page - 1) * limit : 0)
       .limit(Number(limit)),
     models.User.count(query),
   ]);
 
-  console.info(`管理员${ctx.user.nickname}获取了用户列表`);
+  console.info(`管理员${ctx.user.username}获取了用户列表`);
   ctx.body = { users, total };
 };
 
@@ -152,8 +153,8 @@ exports.update = async (ctx) => {
 };
 
 exports.destroy = async (ctx) => {
-  const { _id } = ctx.query;
+  const _id = ctx.params.id;
   await models.User.remove({ _id });
   ctx.status = 200;
-  console.info(`用户 ${_id} 被管理员 ${ctx.user.nickname} 删除`);
+  console.info(`用户 ${_id} 被管理员 ${ctx.user.username} 删除`);
 };

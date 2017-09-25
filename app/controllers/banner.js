@@ -1,4 +1,9 @@
+const fs = require('fs');
+const path = require('path');
+const config = require('config');
 const models = require('../models');
+
+const uploadPath = config.get('uploadPath');
 
 exports.index = async (ctx) => {
   const {
@@ -18,14 +23,14 @@ exports.index = async (ctx) => {
 };
 
 exports.create = async (ctx) => {
-  const { path, title, summary, type, href } = ctx.request.body;
+  const { body } = ctx.request;
 
   const banner = await models.Banner.create({
-    title,
-    summary,
-    type,
-    href,
-    path,
+    title: body.title,
+    summary: body.summary,
+    type: body.type,
+    href: body.href,
+    path: body.path,
     creater: ctx.user._id,
   });
 
@@ -39,7 +44,9 @@ exports.update = async (ctx) => {
 
 exports.destroy = async (ctx) => {
   const _id = ctx.params.id;
-  await models.Banner.remove({ _id });
+  const banner = await models.Banner.findByIdAndRemove(_id);
+  const bannerPath = path.join(uploadPath, banner.path);
+  if (fs.existsSync(bannerPath)) fs.unlinkSync(bannerPath);
   ctx.status = 200;
   console.info(`轮换图 ${_id} 被管理员 ${ctx.user.username} 删除`);
 };
